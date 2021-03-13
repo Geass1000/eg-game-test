@@ -1,0 +1,13 @@
+
+
+<div
+  class="hexagon-area"
+  [style.width.px]="areaWidth"
+  [style.height.px]="areaHeight"
+>
+  <eg-hexagon
+    *ngFor="let hexagon of hexagons"
+    [style.left.px]="getXCoord(hexagon)"
+    [style.top.px]="getYCoord(hexagon)"
+  ></eg-hexagon>
+</div>

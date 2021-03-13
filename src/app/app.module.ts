@@ -5,7 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 // Components
 import { AppComponent } from './app.component';
-import { HexagonComponent } from './hexagon/hexagon.component';
+import { HexagonComponent } from './hexagon';
+import { HexagonGridComponent } from './hexagon-grid';
 
 // Services
 import { GameParamsArbiter } from './services/game-params.arbiter';
@@ -18,6 +19,7 @@ import { GameParamsArbiter } from './services/game-params.arbiter';
   declarations: [
     AppComponent,
     HexagonComponent,
+    HexagonGridComponent,
   ],
   providers: [
     GameParamsArbiter,
