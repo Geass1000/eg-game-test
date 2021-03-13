@@ -7,16 +7,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HexagonComponent } from './hexagon/hexagon.component';
 
+// Services
+import { GameParamsArbiter } from './services/game-params.arbiter';
+
 @NgModule({
-  declarations: [
-    AppComponent,
-    HexagonComponent,
-  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
   ],
-  providers: [],
+  declarations: [
+    AppComponent,
+    HexagonComponent,
+  ],
+  providers: [
+    GameParamsArbiter,
+  ],
   bootstrap: [
     AppComponent,
   ],

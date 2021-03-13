@@ -5,11 +5,47 @@ import type { Observable } from 'rxjs';
 import { Enums } from '../shared';
 
 const SmallRadiusParam = Math.sqrt(3) / 2;
-const DefaultRadius = 70;
+const DefaultRadius = 50;
+const DefaultGameGridRadius = 5;
+const DefaultHexagonStrokeWidth = 5;
 
 @Injectable()
-export class GameDataArbiter {
+export class GameParamsArbiter {
   public gameStatus: Enums.GameStatus;
+
+  #gameGridRadius: number;
+  set gameGridRadius (
+    radius: number,
+  ) {
+    this.#gameGridRadius = radius;
+    this.sjNotif.next();
+  }
+  /**
+   * Radius (GR) of grid.
+   * 1 - 1 el
+   * 2 - 7 els
+   * 3 - 19 els
+   * ...
+   */
+  get gameGridRadius (
+  ): number {
+    return this.#gameGridRadius;
+  }
+
+  #hexagonStrokeWidth: number;
+  set hexagonStrokeWidth (
+    radius: number,
+  ) {
+    this.#hexagonStrokeWidth = radius;
+    this.sjNotif.next();
+  }
+  /**
+   * Width of a hexagon stroke.
+   */
+  get hexagonStrokeWidth (
+  ): number {
+    return this.#hexagonStrokeWidth;
+  }
 
   #cHexagonRadius: number;
   set cHexagonRadius (
@@ -65,7 +101,9 @@ export class GameDataArbiter {
   private sjNotif: Subject<void> = new Subject();
 
   constructor () {
+    this.hexagonStrokeWidth = DefaultHexagonStrokeWidth;
     this.cHexagonRadius = DefaultRadius;
+    this.gameGridRadius = DefaultGameGridRadius;
   }
 
   /**

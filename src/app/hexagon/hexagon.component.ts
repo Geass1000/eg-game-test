@@ -1,13 +1,10 @@
 import {
   Component,
-  Input,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   OnInit,
 } from '@angular/core';
-import { GameDataArbiter } from '../services/game-data.arbiter';
-
-const DefaultStroke = 5;
+import { GameParamsArbiter } from '../services/game-params.arbiter';
 
 @Component({
   selector: 'eg-hexagon',
@@ -36,18 +33,12 @@ export class HexagonComponent implements OnInit {
   /**
    * Width of hexagon stroke.
    */
-  public strokeWidth: number = DefaultStroke;
-  @Input('strokeWidth')
-  set isStrokeWidth (value: number) {
-    this.strokeWidth = _.isNaN(+value) === true
-      ? DefaultStroke : value;
-    this.updateView();
-  }
+  public strokeWidth: number;
 
   constructor (
     private changeDetection: ChangeDetectorRef,
     // Services
-    private gameDataArbiter: GameDataArbiter,
+    private gameParamsArbiter: GameParamsArbiter,
   ) {
     this.changeDetection.detach();
   }
@@ -69,11 +60,13 @@ export class HexagonComponent implements OnInit {
    */
   updateView (
   ): void {
-    const cRadius = this.gameDataArbiter.cHexagonRadius;
-    const iRadius = this.gameDataArbiter.iHexagonRadius;
+    const cRadius = this.gameParamsArbiter.cHexagonRadius;
+    const iRadius = this.gameParamsArbiter.iHexagonRadius;
 
-    this.width = this.gameDataArbiter.hexagonWidth + this.strokeWidth;
-    this.height = this.gameDataArbiter.hexagonHeight + this.strokeWidth;
+    this.strokeWidth = this.gameParamsArbiter.hexagonStrokeWidth;
+
+    this.width = this.gameParamsArbiter.hexagonWidth + this.strokeWidth;
+    this.height = this.gameParamsArbiter.hexagonHeight + this.strokeWidth;
 
     this.viewBox = `0 0 ${this.width} ${this.height}`;
 
