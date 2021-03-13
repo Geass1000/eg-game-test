@@ -2,12 +2,25 @@ import * as Enums from '../shared/enums';
 import * as Interfaces from '../shared/interfaces';
 
 export class Hexagon {
-  private coords: Interfaces.HexagonCubeCoords;
+  private cubeCoords: Interfaces.HexagonCubeCoords;
+  private axialCoords: Interfaces.HexagonAxialCoords;
+  private offsetCoords: Interfaces.HexagonOffsetCoords;
 
   constructor (
     coords: Interfaces.HexagonCoords,
   ) {
-    this.coords = this.convertToCube(coords);
+    switch (coords.type) {
+      case Enums.HexagonCoordsType.Axial: {
+        this.axialCoords = { ...coords };
+        break;
+      }
+      case Enums.HexagonCoordsType.Offset: {
+        this.offsetCoords = { ...coords };
+        break;
+      }
+    }
+
+    this.cubeCoords = this.convertToCube(coords);
   }
 
   /**
@@ -17,7 +30,7 @@ export class Hexagon {
    */
   getCoordsInCube (
   ): Interfaces.HexagonCubeCoords {
-    return { ...this.coords };
+    return { ...this.cubeCoords };
   }
 
   /**
@@ -27,11 +40,16 @@ export class Hexagon {
    */
   getCoordsInAxial (
   ): Interfaces.HexagonAxialCoords {
-    return {
+    if (_.isNil(this.axialCoords) === false) {
+      return { ...this.axialCoords };
+    }
+
+    this.axialCoords = {
       type: Enums.HexagonCoordsType.Axial,
-      col: this.coords.x,
-      row: this.coords.z,
+      col: this.cubeCoords.x,
+      row: this.cubeCoords.z,
     };
+    return { ...this.axialCoords };
   }
 
   /**
@@ -41,11 +59,16 @@ export class Hexagon {
    */
   getCoordsInOffset (
   ): Interfaces.HexagonOffsetCoords {
-    return {
+    if (_.isNil(this.offsetCoords) === false) {
+      return { ...this.offsetCoords };
+    }
+
+    this.offsetCoords = {
       type: Enums.HexagonCoordsType.Offset,
-      col: this.coords.x,
-      row: this.coords.z + (this.coords.x - (this.coords.x & 1)) / 2,
+      col: this.cubeCoords.x,
+      row: this.cubeCoords.z + (this.cubeCoords.x - (this.cubeCoords.x & 1)) / 2,
     };
+    return { ...this.offsetCoords };
   }
 
   /**
@@ -87,9 +110,7 @@ export class Hexagon {
         };
       }
       case Enums.HexagonCoordsType.Cube: {
-        return {
-          ...coords,
-        };
+        return coords;
       }
     }
   }
