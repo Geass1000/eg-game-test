@@ -5,3 +5,5 @@ export {
   Interfaces,
   Enums,
 };
+
+export { BaseComponent } from './base.component';

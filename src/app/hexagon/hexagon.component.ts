@@ -4,6 +4,9 @@ import {
   ChangeDetectionStrategy,
   OnInit,
 } from '@angular/core';
+
+import { BaseComponent } from '../shared';
+
 import { GameParamsArbiter } from '../services/game-params.arbiter';
 
 @Component({
@@ -12,7 +15,7 @@ import { GameParamsArbiter } from '../services/game-params.arbiter';
   styleUrls: [ './hexagon.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HexagonComponent implements OnInit {
+export class HexagonComponent extends BaseComponent implements OnInit {
   /**
    * Path points of `path` tag with a hexagon.
    */
@@ -36,11 +39,11 @@ export class HexagonComponent implements OnInit {
   public strokeWidth: number;
 
   constructor (
-    private changeDetection: ChangeDetectorRef,
+    protected changeDetection: ChangeDetectorRef,
     // Services
     private gameParamsArbiter: GameParamsArbiter,
   ) {
-    this.changeDetection.detach();
+    super(changeDetection);
   }
 
   /**
@@ -81,6 +84,6 @@ export class HexagonComponent implements OnInit {
     ];
     this.path = pathParts.join(` `);
 
-    this.changeDetection.detectChanges();
+    this.render();
   }
 }

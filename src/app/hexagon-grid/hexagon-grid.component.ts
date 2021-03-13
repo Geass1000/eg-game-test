@@ -5,10 +5,12 @@ import {
   OnInit,
 } from '@angular/core';
 
+import * as Shared from '../shared';
+
 import * as Managers from '../managers';
 import { EngineFactory } from '../services/engine.factory';
 import { GameParamsArbiter } from '../services/game-params.arbiter';
-import * as Shared from '../shared';
+
 
 @Component({
   selector: 'eg-hexagon-grid',
@@ -16,7 +18,7 @@ import * as Shared from '../shared';
   styleUrls: [ './hexagon-grid.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HexagonGridComponent implements OnInit {
+export class HexagonGridComponent extends Shared.BaseComponent implements OnInit {
   /**
    * List of hexagons on the grid.
    */
@@ -46,18 +48,24 @@ export class HexagonGridComponent implements OnInit {
   private gridSize: number;
 
   constructor (
-    private changeDetection: ChangeDetectorRef,
+    protected changeDetection: ChangeDetectorRef,
     // Services
     private gameParamsArbiter: GameParamsArbiter,
     private engineFactory: EngineFactory,
   ) {
-    this.changeDetection.detach();
+    super(changeDetection);
   }
 
   /**
    * Inits component.
    */
   ngOnInit (): void {
+    const gameParamsArbiter$ = this.gameParamsArbiter.getObserver()
+      .subscribe(() => {
+        this.updateView();
+      });
+    this.subscribe(gameParamsArbiter$);
+
     this.updateView();
   }
 
@@ -71,12 +79,16 @@ export class HexagonGridComponent implements OnInit {
    */
   updateView (
   ): void {
+    const prevGridSize = this.gridSize;
     this.gridSize = this.gameParamsArbiter.gameGridRadius - 1;
 
-    this.updateListOfHexagons();
+    if (prevGridSize !== this.gridSize) {
+      this.updateListOfHexagons();
+    }
+
     this.updateAreaParams();
 
-    this.changeDetection.detectChanges();
+    this.render();
   }
 
   /**
