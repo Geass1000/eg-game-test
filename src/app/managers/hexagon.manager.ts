@@ -3,10 +3,12 @@ import { Interfaces } from '../shared';
 
 import { HexagonCoordsConverterService } from '../services/hexagon-coords-converter.service';
 
-export class HexagonManager {
+export class HexagonManager <THexagonValue = any> {
   private cubeCoords: Interfaces.HexagonCubeCoords;
   private axialCoords: Interfaces.HexagonAxialCoords;
   private offsetCoords: Interfaces.HexagonOffsetCoords;
+
+  public value: THexagonValue;
 
   constructor (
     // Services
@@ -14,8 +16,16 @@ export class HexagonManager {
   ) {
   }
 
+  /**
+   * Inits the `Hexagon` manager:
+   *  - sets coords.
+   *  - sets a value.
+   *
+   * @param  {Interfaces.HexagonCoords} coords
+   */
   $init (
     coords: Interfaces.HexagonCoords,
+    value: THexagonValue = null,
   ): void {
     this.axialCoords = null;
     this.offsetCoords = null;
@@ -31,6 +41,7 @@ export class HexagonManager {
     }
 
     this.cubeCoords = this.hexagonCoordsConverterService.convertAnyToCube(coords);
+    this.value = value;
   }
 
   /**
