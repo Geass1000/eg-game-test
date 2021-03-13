@@ -108,7 +108,7 @@ module.exports =  {
     'max-classes-per-file': [ 'warn', 1 ],
     'max-len': [ 'warn', {
       'code': 120,
-      'comments': 100,
+      'comments': 120,
     }],
     'arrow-parens': [ 'warn', 'always' ],
     'arrow-body-style': [ 'error', 'always' ],
