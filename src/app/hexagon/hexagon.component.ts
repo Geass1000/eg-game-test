@@ -5,9 +5,8 @@ import {
   ChangeDetectionStrategy,
   OnInit,
 } from '@angular/core';
+import { GameDataArbiter } from '../services/game-data.arbiter';
 
-const SmallRadiusParam = Math.sqrt(3) / 2;
-const DefaultRadius = 100;
 const DefaultStroke = 5;
 
 @Component({
@@ -35,25 +34,6 @@ export class HexagonComponent implements OnInit {
   public height: number;
 
   /**
-   * Radius (r) of inscribed circle.
-   *
-   * https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Regular_hexagon_1.svg/200px-Regular_hexagon_1.svg.png
-   */
-  public smallRadius: number;
-  /**
-   * Radius (R) of circumscribed circle.
-   *
-   * https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Regular_hexagon_1.svg/200px-Regular_hexagon_1.svg.png
-   */
-  public radius: number = DefaultRadius;
-  @Input('raius')
-  set inRadius (value: number) {
-    this.radius = _.isNaN(+value) === true
-      ? DefaultRadius : value;
-    this.updateView();
-  }
-
-  /**
    * Width of hexagon stroke.
    */
   public strokeWidth: number = DefaultStroke;
@@ -66,6 +46,8 @@ export class HexagonComponent implements OnInit {
 
   constructor (
     private changeDetection: ChangeDetectorRef,
+    // Services
+    private gameDataArbiter: GameDataArbiter,
   ) {
     this.changeDetection.detach();
   }
@@ -87,20 +69,21 @@ export class HexagonComponent implements OnInit {
    */
   updateView (
   ): void {
-    this.smallRadius = this.radius * SmallRadiusParam;
+    const cRadius = this.gameDataArbiter.cHexagonRadius;
+    const iRadius = this.gameDataArbiter.iHexagonRadius;
 
-    this.width = this.radius * 2 + this.strokeWidth;
-    this.height = this.smallRadius * 2 + this.strokeWidth;
+    this.width = this.gameDataArbiter.hexagonWidth + this.strokeWidth;
+    this.height = this.gameDataArbiter.hexagonHeight + this.strokeWidth;
 
     this.viewBox = `0 0 ${this.width} ${this.height}`;
 
     const pathParts = [
-      `M${this.radius / 2 + this.strokeWidth / 2} ${0 + this.strokeWidth / 2}`, // Top-Left point
-      `l${this.radius} ${0}`, // Top-Right point
-      `l${this.radius / 2} ${this.smallRadius}`, // Right point
-      `l${-this.radius / 2} ${this.smallRadius}`, // Bottom-Right point
-      `l${-this.radius} ${0}`, // Bottom-Left point
-      `l${-this.radius / 2} ${- this.smallRadius}`, // Left point
+      `M${cRadius / 2 + this.strokeWidth / 2} ${0 + this.strokeWidth / 2}`, // Top-Left point
+      `l${cRadius} ${0}`, // Top-Right point
+      `l${cRadius / 2} ${iRadius}`, // Right point
+      `l${-cRadius / 2} ${iRadius}`, // Bottom-Right point
+      `l${-cRadius} ${0}`, // Bottom-Left point
+      `l${-cRadius / 2} ${- iRadius}`, // Left point
       `Z`, // Top-Left point
     ];
     this.path = pathParts.join(` `);
