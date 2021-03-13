@@ -1,0 +1,2 @@
+
+export { Hexagon } from './hexagon';
