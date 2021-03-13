@@ -5,7 +5,8 @@ import {
   OnInit,
 } from '@angular/core';
 
-import * as Engine from '../engine';
+import * as Managers from '../managers';
+import { EngineFactory } from '../services/engine.factory';
 import { GameParamsArbiter } from '../services/game-params.arbiter';
 import * as Shared from '../shared';
 
@@ -19,7 +20,7 @@ export class HexagonGridComponent implements OnInit {
   /**
    * List of hexagons on the grid.
    */
-  public hexagons: Engine.Hexagon[];
+  public hexagons: Managers.HexagonManager[];
 
   /**
    * Width of the area.
@@ -48,6 +49,7 @@ export class HexagonGridComponent implements OnInit {
     private changeDetection: ChangeDetectorRef,
     // Services
     private gameParamsArbiter: GameParamsArbiter,
+    private engineFactory: EngineFactory,
   ) {
     this.changeDetection.detach();
   }
@@ -89,7 +91,7 @@ export class HexagonGridComponent implements OnInit {
     // and remove all wrong hexagons.
     for (let row = -this.gridSize; row <= this.gridSize; row++) {
       for (let col = -this.gridSize; col <= this.gridSize; col++) {
-        const hexagon = new Engine.Hexagon({
+        const hexagon = this.engineFactory.createHexagonManager({
           type: Shared.Enums.HexagonCoordsType.Axial,
           col: col,
           row: row,
@@ -205,7 +207,7 @@ export class HexagonGridComponent implements OnInit {
    * @return {number}
    */
   getXCoord (
-    hexagon: Engine.Hexagon,
+    hexagon: Managers.HexagonManager,
   ): number {
     const axialCoords = hexagon.getCoordsInAxial();
     const x = this.gameParamsArbiter.cHexagonRadius * (3/2 * axialCoords.row);
@@ -219,7 +221,7 @@ export class HexagonGridComponent implements OnInit {
    * @return {number}
    */
   getYCoord (
-    hexagon: Engine.Hexagon,
+    hexagon: Managers.HexagonManager,
   ): number {
     const axialCoords = hexagon.getCoordsInAxial();
     const y = this.gameParamsArbiter.cHexagonRadius * (

@@ -1,2 +1,0 @@
-
-export { Hexagon } from './hexagon';

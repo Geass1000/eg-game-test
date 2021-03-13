@@ -10,6 +10,8 @@ import { HexagonGridComponent } from './hexagon-grid';
 
 // Services
 import { GameParamsArbiter } from './services/game-params.arbiter';
+import { HexagonCoordsConverterService } from './services/hexagon-coords-converter.service';
+import { EngineFactory } from './services/engine.factory';
 
 @NgModule({
   imports: [
@@ -23,6 +25,8 @@ import { GameParamsArbiter } from './services/game-params.arbiter';
   ],
   providers: [
     GameParamsArbiter,
+    HexagonCoordsConverterService,
+    EngineFactory,
   ],
   bootstrap: [
     AppComponent,
