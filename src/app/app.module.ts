@@ -10,6 +10,7 @@ import { HexagonGridComponent } from './hexagon-grid';
 
 // Services
 import { GameParamsArbiter } from './services/game-params.arbiter';
+import { GameAreaArbiter } from './services/game-area.arbiter';
 import { HexagonCoordsConverterService } from './services/hexagon-coords-converter.service';
 import { EngineFactory } from './services/engine.factory';
 
@@ -25,6 +26,7 @@ import { EngineFactory } from './services/engine.factory';
   ],
   providers: [
     GameParamsArbiter,
+    GameAreaArbiter,
     HexagonCoordsConverterService,
     EngineFactory,
   ],
