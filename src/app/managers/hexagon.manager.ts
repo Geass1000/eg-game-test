@@ -83,4 +83,19 @@ export class HexagonManager <THexagonValue = any> {
     this.offsetCoords = this.hexagonCoordsConverterService.convertCubeToOffset(this.cubeCoords);
     return { ...this.offsetCoords };
   }
+
+  /**
+   * Converts an instance to plain object and returns it.
+   *
+   * @return {Interfaces.Hexagon<THexagonValue>}
+   */
+  toJSON (
+  ): Interfaces.Hexagon<THexagonValue> {
+    return {
+      x: this.cubeCoords.x,
+      y: this.cubeCoords.y,
+      z: this.cubeCoords.z,
+      value: this.value,
+    };
+  }
 }
