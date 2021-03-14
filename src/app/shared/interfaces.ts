@@ -1,5 +1,12 @@
 import * as Enums from './enums';
 
+export interface Hexagon <THexagonValue = any> {
+  x: number;
+  y: number;
+  z: number;
+  value: THexagonValue;
+}
+
 export interface HexagonCubeCoords {
   type: Enums.HexagonCoordsType.Cube;
   x: number;
