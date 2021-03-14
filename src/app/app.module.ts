@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRouter } from './app.router';
 
 // Components
 import { AppComponent } from './app.component';
@@ -18,7 +18,7 @@ import { GameService } from './services/game.service';
 @NgModule({
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    AppRouter,
   ],
   declarations: [
     AppComponent,
