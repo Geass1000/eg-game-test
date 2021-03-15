@@ -7,3 +7,4 @@ export {
 };
 
 export { BaseComponent } from './base.component';
+export { BaseService } from './base.service';
