@@ -12,6 +12,13 @@ import { GameService } from './game.service';
 @Injectable()
 export class GameItemsArbiter extends BaseService {
   #hexagons: HexagonManager<number>[];
+  /**
+   * List of hexagons.
+   */
+  get hexagons (
+  ): HexagonManager<number>[] {
+    return this.#hexagons;
+  }
 
   private sjNotif: Subject<void> = new Subject();
 
