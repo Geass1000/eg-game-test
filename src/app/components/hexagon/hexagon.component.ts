@@ -3,11 +3,12 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
   OnInit,
+  Input,
 } from '@angular/core';
 
-import { BaseComponent } from '../shared';
+import { BaseComponent } from '../../shared';
 
-import { GameParamsArbiter } from '../services/game-params.arbiter';
+import { GameParamsArbiter } from '../../services/game-params.arbiter';
 
 @Component({
   selector: 'eg-hexagon',
@@ -16,6 +17,16 @@ import { GameParamsArbiter } from '../services/game-params.arbiter';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HexagonComponent extends BaseComponent implements OnInit {
+  public value: string;
+  @Input('value')
+  set inValue (
+    value: any,
+  ) {
+    this.value = _.isNil(value) === false
+      ? `${value}` : this.value;
+    this.render();
+  }
+
   /**
    * Path points of `path` tag with a hexagon.
    */
@@ -32,6 +43,14 @@ export class HexagonComponent extends BaseComponent implements OnInit {
    * Height of SVG tag.
    */
   public height: number;
+  /**
+   * Width of SVG tag.
+   */
+  public xCenter: number;
+  /**
+   * Height of SVG tag.
+   */
+  public yCenter: number;
 
   /**
    * Width of hexagon stroke.

@@ -1,0 +1,19 @@
+
+:host {
+  display: flex;
+}
+
+path {
+  fill: none;
+  stroke: black;
+  stroke-width: 5px;
+}
+
+text {
+  font-size: 34px;
+  font-family: monospace;
+  text-anchor: middle;
+  alignment-baseline: middle;
+
+  pointer-events: none;
+}
