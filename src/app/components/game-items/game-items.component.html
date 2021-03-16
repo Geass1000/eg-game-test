@@ -1,0 +1,7 @@
+
+<eg-hexagon
+  *ngFor="let hexagon of hexagons"
+  [style.left.px]="gameAreaArbiter.getXCoord(hexagon)"
+  [style.top.px]="gameAreaArbiter.getYCoord(hexagon)"
+  [value]="hexagon.value"
+></eg-hexagon>

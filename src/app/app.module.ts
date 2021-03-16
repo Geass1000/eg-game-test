@@ -6,7 +6,9 @@ import { AppRouter } from './app.router';
 // Components
 import { AppComponent } from './app.component';
 import { HexagonComponent } from './hexagon';
-import { HexagonGridComponent } from './hexagon-grid';
+import { GameGridComponent } from './components/game-grid';
+import { GameAreaComponent } from './components/game-area';
+import { GameItemsComponent } from './components/game-items';
 
 // Services
 import { GameParamsArbiter } from './services/game-params.arbiter';
@@ -24,7 +26,9 @@ import { GameService } from './services/game.service';
   declarations: [
     AppComponent,
     HexagonComponent,
-    HexagonGridComponent,
+    GameGridComponent,
+    GameAreaComponent,
+    GameItemsComponent,
   ],
   providers: [
     GameParamsArbiter,

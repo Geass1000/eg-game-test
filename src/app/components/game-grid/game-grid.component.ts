@@ -5,24 +5,24 @@ import {
   OnInit,
 } from '@angular/core';
 
-import * as Shared from '../shared';
+import * as Shared from '../../shared';
 
-import * as Managers from '../managers';
-import { EngineFactory } from '../services/engine.factory';
-import { GameParamsArbiter } from '../services/game-params.arbiter';
-import { GameAreaArbiter } from '../services/game-area.arbiter';
+import * as Managers from '../../managers';
+import { EngineFactory } from '../../services/engine.factory';
+import { GameParamsArbiter } from '../../services/game-params.arbiter';
+import { GameAreaArbiter } from '../../services/game-area.arbiter';
 
 @Component({
-  selector: 'eg-hexagon-grid',
-  templateUrl: './hexagon-grid.component.html',
-  styleUrls: [ './hexagon-grid.component.scss' ],
+  selector: 'eg-game-grid',
+  templateUrl: './game-grid.component.html',
+  styleUrls: [ './game-grid.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HexagonGridComponent extends Shared.BaseComponent implements OnInit {
+export class GameGridComponent extends Shared.BaseComponent implements OnInit {
   /**
-   * List of hexagons on the grid.
+   * List of hexagons which we use to build the grid.
    */
-  public hexagons: Managers.HexagonManager[];
+  public gridHexagons: Managers.HexagonManager<void>[];
 
   /**
    * Number of hexagons in every axis.
@@ -114,35 +114,6 @@ export class HexagonGridComponent extends Shared.BaseComponent implements OnInit
       }
     }
 
-    this.hexagons = hexagons;
-  }
-
-  /**
-   * Calculates and returns an X coordinate of the hexagon by its Axial coords.
-   *
-   * @param  {Engine.Hexagon} hexagon
-   * @return {number}
-   */
-  getXCoord (
-    hexagon: Managers.HexagonManager,
-  ): number {
-    const axialCoords = hexagon.getCoordsInAxial();
-    const x = this.gameParamsArbiter.cHexagonRadius * (3/2 * axialCoords.row);
-    return x + this.gameAreaArbiter.gameAreaXCenter;
-  }
-
-  /**
-   * Calculates and returns an Y coordinate of the hexagon by its Axial coords.
-   *
-   * @param  {Engine.Hexagon} hexagon
-   * @return {number}
-   */
-  getYCoord (
-    hexagon: Managers.HexagonManager,
-  ): number {
-    const axialCoords = hexagon.getCoordsInAxial();
-    const y = this.gameParamsArbiter.cHexagonRadius * (
-      Math.sqrt(3) / 2 * axialCoords.row  +  Math.sqrt(3) * axialCoords.col);
-    return y + this.gameAreaArbiter.gameAreaYCenter;
+    this.gridHexagons = hexagons;
   }
 }
