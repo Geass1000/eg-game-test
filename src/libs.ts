@@ -4,6 +4,7 @@ import isNaN from 'lodash/isNaN';
 import isEmpty from 'lodash/isEmpty';
 import isFunction from 'lodash/isFunction';
 import map from 'lodash/map';
+import concat from 'lodash/concat';
 import type { LoDashStatic } from 'lodash';
 
 const lodash = {
@@ -13,6 +14,7 @@ const lodash = {
   isEmpty,
   isFunction,
   map,
+  concat,
 } as LoDashStatic;
 
 (window as any)._ = lodash;
