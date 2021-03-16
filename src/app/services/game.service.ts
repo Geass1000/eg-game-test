@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, JsonpClientBackend } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import * as Managers from '../managers';
 import { Interfaces } from '../shared';
