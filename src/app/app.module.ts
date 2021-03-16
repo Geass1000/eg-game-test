@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRouter } from './app.router';
 
 // Components
-import { AppComponent } from './app.component';
+import { AppComponent } from './components/app';
 import { HexagonComponent } from './components/hexagon';
 import { GameGridComponent } from './components/game-grid';
 import { GameAreaComponent } from './components/game-area';

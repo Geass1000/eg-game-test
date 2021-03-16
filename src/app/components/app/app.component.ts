@@ -1,15 +1,16 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { GameItemsArbiter } from './services/game-items.arbiter';
-import { GameParamsArbiter } from './services/game-params.arbiter';
+import { GameItemsArbiter } from '../../services/game-items.arbiter';
+import { GameParamsArbiter } from '../../services/game-params.arbiter';
 
-import { BaseComponent } from './shared';
+import { BaseComponent } from '../../shared';
 
 @Component({
   selector: 'eg-root',
   templateUrl: './app.component.html',
   styleUrls: [ './app.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends BaseComponent implements OnInit {
   public gridRadius: number;
