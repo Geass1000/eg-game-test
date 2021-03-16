@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import type { Observable } from 'rxjs';
 
 import { GameParamsArbiter } from './game-params.arbiter';
+import { HexagonManager } from '../managers';
 
 import { BaseService } from '../shared/base.service';
 
@@ -168,5 +169,34 @@ export class GameAreaArbiter extends BaseService {
     this.#gameAreaYCenter = this.gameAreaHeight / 2;
 
     this.sjNotif.next();
+  }
+
+  /**
+   * Calculates and returns an X Cartesian coordinate of the hexagon by its Axial coords.
+   *
+   * @param  {HexagonManager} hexagon
+   * @return {number}
+   */
+  getXCoord (
+    hexagon: HexagonManager,
+  ): number {
+    const axialCoords = hexagon.getCoordsInAxial();
+    const x = this.gameParamsArbiter.cHexagonRadius * (3/2 * axialCoords.row);
+    return x + this.gameAreaXCenter;
+  }
+
+  /**
+   * Calculates and returns an Y Cartesian coordinate of the hexagon by its Axial coords.
+   *
+   * @param  {HexagonManager} hexagon
+   * @return {number}
+   */
+  getYCoord (
+    hexagon: HexagonManager,
+  ): number {
+    const axialCoords = hexagon.getCoordsInAxial();
+    const y = this.gameParamsArbiter.cHexagonRadius * (
+      Math.sqrt(3) / 2 * axialCoords.row  +  Math.sqrt(3) * axialCoords.col);
+    return y + this.gameAreaYCenter;
   }
 }
