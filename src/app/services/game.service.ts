@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, JsonpClientBackend } from '@angular/common/http';
 
 import * as Managers from '../managers';
 import { Interfaces } from '../shared';
@@ -36,17 +36,25 @@ export class GameService {
       return plainHexagon;
     });
 
-    const newHexagons = await this.http.post<Interfaces.Hexagon[]>(
-      `${environment.apiUrl}/${gameRadius}`,
-      preparedHexagons,
-    ).toPromise();
+    try {
+      const newHexagons = await this.http.post<Interfaces.Hexagon[]>(
+        `${environment.apiUrl}/${gameRadius}`,
+        preparedHexagons,
+      ).toPromise();
+      console.log(`GameService.getNewHexagons:`,
+        `We have loaded next elements:`, newHexagons);
 
-    const newHexagonManagers = _.map(newHexagons, (newHexagon) => {
-      const newHexagonManager = this.engineFactory.createHexagonManagerFromHexagon(newHexagon);
-      return newHexagonManager;
-    });
+      const newHexagonManagers = _.map(newHexagons, (newHexagon) => {
+        const newHexagonManager = this.engineFactory.createHexagonManagerFromHexagon(newHexagon);
+        return newHexagonManager;
+      });
 
-    return newHexagonManagers;
+      return newHexagonManagers;
+    } catch (error) {
+      console.error(`GameService.getNewHexagons:`,
+        `We can't load a data from the server. Error:`, error);
+      return [];
+    }
   }
 
 }
