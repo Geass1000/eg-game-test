@@ -189,6 +189,31 @@ export class GameItemsArbiter extends BaseService {
   }
 
   /**
+   * Returns an inversion of the direction.
+   *
+   * @param  {Enums.MoveDirection} moveDirection
+   * @return {Enums.MoveDirection}
+   */
+  inverseDirection (
+    moveDirection: Enums.MoveDirection,
+  ): Enums.MoveDirection {
+    switch (moveDirection) {
+      case Enums.MoveDirection.Top:
+        return Enums.MoveDirection.Bottom;
+      case Enums.MoveDirection.Bottom:
+        return Enums.MoveDirection.Top;
+      case Enums.MoveDirection.TopRight:
+        return Enums.MoveDirection.BottomLeft;
+      case Enums.MoveDirection.BottomLeft:
+        return Enums.MoveDirection.TopRight;
+      case Enums.MoveDirection.TopLeft:
+        return Enums.MoveDirection.BottomRight;
+      case Enums.MoveDirection.BottomRight:
+        return Enums.MoveDirection.TopLeft;
+    }
+  }
+
+  /**
    * Returns a constant offset by the direction.
    *
    * @param  {Enums.MoveDirection} moveDirection
