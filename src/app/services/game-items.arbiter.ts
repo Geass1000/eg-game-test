@@ -125,8 +125,8 @@ export class GameItemsArbiter extends BaseService {
     hexagons: HexagonManager<number>[],
     moveDirection: Enums.MoveDirection,
   ): HexagonManager<number>[] {
-    const mergeAxis = this.getMergeAxisByDirection(moveDirection);
-    const sortedHexagons = _.orderBy(hexagons, [ mergeAxis ], [ 'desc' ]);
+    const positiveAxis = this.getPositiveAxisByDirection(moveDirection);
+    const sortedHexagons = _.orderBy(hexagons, [ positiveAxis ], [ 'desc' ]);
 
     let i = 0;
     const mergedHexagons: HexagonManager<number>[] = [];
@@ -198,8 +198,8 @@ export class GameItemsArbiter extends BaseService {
   }
 
   /**
-   * Returns a merge axis by the direction.
-   * It's a positive axis which we use to sort hexagon array by desc to merge them.
+   * Returns a positive axis by the direction.
+   * We use it to sort hexagon array by desc to merge them.
    *
    * Hex(x, y, z)
    * Ex:
@@ -216,7 +216,7 @@ export class GameItemsArbiter extends BaseService {
    * @param  {Enums.MoveDirection} moveDirection
    * @return {Enums.Axis}
    */
-  private getMergeAxisByDirection (
+  private getPositiveAxisByDirection (
     moveDirection: Enums.MoveDirection,
   ): Enums.Axis {
     switch (moveDirection) {
