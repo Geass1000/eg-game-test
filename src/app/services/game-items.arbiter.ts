@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import type { Observable } from 'rxjs';
 
-import { Enums, BaseService } from '../shared';
+import { Enums, BaseService, Interfaces } from '../shared';
 import { HexagonManager } from '../managers';
 
 import { GameParamsArbiter } from './game-params.arbiter';
@@ -99,7 +99,7 @@ export class GameItemsArbiter extends BaseService {
         continue;
       }
 
-      const axisMergedHexagons = this.mergeHexagons(hexagonsByDirection, moveDirection);
+      const axisMergedHexagons = this.mergeHexagons(axisValue, hexagonsByDirection, moveDirection);
 
       // FYI: We use a `forEach` + `push` because `concat` takes more resources
       _.forEach(axisMergedHexagons, (mergedHexagon) => {
@@ -122,11 +122,14 @@ export class GameItemsArbiter extends BaseService {
    * @return {HexagonManager<number>[]}
    */
   private mergeHexagons (
+    mainAxisValue: number,
     hexagons: HexagonManager<number>[],
     moveDirection: Enums.MoveDirection,
   ): HexagonManager<number>[] {
     const positiveAxis = this.getPositiveAxisByDirection(moveDirection);
     const sortedHexagons = _.orderBy(hexagons, [ positiveAxis ], [ 'desc' ]);
+
+    let maxPositiveHexagonCoords = this.getMaxPositiveHexagonCoords(mainAxisValue, moveDirection);
 
     let i = 0;
     const mergedHexagons: HexagonManager<number>[] = [];
@@ -154,6 +157,90 @@ export class GameItemsArbiter extends BaseService {
     }
 
     return mergedHexagons;
+  }
+
+  /**
+   * Returns max positive value in the main line by the direction.
+   *
+   * @param  {number} mainAxisValue
+   * @param  {Enums.MoveDirection} moveDirection
+   * @return {Interfaces.Hexagon}
+   */
+  getMaxPositiveHexagonCoords (
+    mainAxisValue: number,
+    moveDirection: Enums.MoveDirection,
+  ): Interfaces.HexagonCubeCoords {
+    const gridSize = this.gameParamsArbiter.gameGridRadius - 1;
+    const positiveAxisValue = gridSize - mainAxisValue;
+    const negativeAxisValue = -(mainAxisValue + positiveAxisValue);
+
+    const mainAxis = this.getMainAxisByDirection(moveDirection);
+    const positiveAxis = this.getPositiveAxisByDirection(moveDirection);
+    const negativeAxis = this.getNegativeAxisByDirection(moveDirection);
+
+    // FYI: We convert value to `any` because we can't make different types for
+    // main, merge and rest axies.
+    return {
+      type: Enums.HexagonCoordsType.Cube,
+      [mainAxis]: mainAxisValue,
+      [positiveAxis]: positiveAxisValue,
+      [negativeAxis]: negativeAxisValue,
+    } as any;
+  }
+
+  /**
+   * Returns a constant offset by the direction.
+   *
+   * @param  {Enums.MoveDirection} moveDirection
+   * @return {Interfaces.HexagonCubeCoords}
+   */
+  getOffsetByDirection (
+    moveDirection: Enums.MoveDirection,
+  ): Interfaces.HexagonCubeCoords {
+    switch (moveDirection) {
+      case Enums.MoveDirection.TopRight:
+        return {
+          type: Enums.HexagonCoordsType.Cube,
+          x: +1,
+          y: 0,
+          z: -1,
+        };
+      case Enums.MoveDirection.TopLeft:
+        return {
+          type: Enums.HexagonCoordsType.Cube,
+          x: -1,
+          y: +1,
+          z: 0,
+        };
+      case Enums.MoveDirection.Top:
+        return {
+          type: Enums.HexagonCoordsType.Cube,
+          x: 0,
+          y:  +1,
+          z: -1,
+        };
+      case Enums.MoveDirection.BottomRight:
+        return {
+          type: Enums.HexagonCoordsType.Cube,
+          x: +1,
+          y: -1,
+          z: 0,
+        };
+      case Enums.MoveDirection.BottomLeft:
+        return {
+          type: Enums.HexagonCoordsType.Cube,
+          x: -1,
+          y: 0,
+          z: +1,
+        };
+      case Enums.MoveDirection.Bottom:
+        return {
+          type: Enums.HexagonCoordsType.Cube,
+          x: 0,
+          y: -1,
+          z: +1,
+        };
+    }
   }
 
   /**
@@ -232,6 +319,43 @@ export class GameItemsArbiter extends BaseService {
         return Enums.Axis.Y;
       case Enums.MoveDirection.BottomRight:
         return Enums.Axis.X;
+    }
+  }
+
+  /**
+   * Returns a negative axis by the direction.
+   *
+   * Hex(x, y, z)
+   * Ex:
+   *  - Direction: Bottom-Left
+   *  - Main axis: Y
+   *  - Hex(-3, +2, +1), Hex(-2, +2, 0), Hex(-1, +2, -1), Hex(0, +2, -2), Hex(+1, +2, -3)
+   *  - Negative axis is a X (-3).
+   *
+   *  - Direction: Top-Right
+   *  - Main axis: Y
+   *  - Hex(-3, +2, +1), Hex(-2, +2, 0), Hex(-1, +2, -1), Hex(0, +2, -2), Hex(+1, +2, -3)
+   *  - Merge axis is a Z (-3).
+   *
+   * @param  {Enums.MoveDirection} moveDirection
+   * @return {Enums.Axis}
+   */
+  private getNegativeAxisByDirection (
+    moveDirection: Enums.MoveDirection,
+  ): Enums.Axis {
+    switch (moveDirection) {
+      case Enums.MoveDirection.Top:
+        return Enums.Axis.Z;
+      case Enums.MoveDirection.Bottom:
+        return Enums.Axis.Y;
+      case Enums.MoveDirection.TopRight:
+        return Enums.Axis.Z;
+      case Enums.MoveDirection.BottomLeft:
+        return Enums.Axis.X;
+      case Enums.MoveDirection.TopLeft:
+        return Enums.Axis.X;
+      case Enums.MoveDirection.BottomRight:
+        return Enums.Axis.Y;
     }
   }
 }
