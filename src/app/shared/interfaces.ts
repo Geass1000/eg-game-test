@@ -4,7 +4,7 @@ export interface Hexagon <THexagonValue = any> {
   x: number;
   y: number;
   z: number;
-  value: THexagonValue;
+  value?: THexagonValue;
 }
 
 export interface HexagonCubeCoords {
