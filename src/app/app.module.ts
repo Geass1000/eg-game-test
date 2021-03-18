@@ -21,6 +21,8 @@ import { GameItemsArbiter } from './services/game-items.arbiter';
 import { HexagonCoordsConverterService } from './services/hexagon-coords-converter.service';
 import { EngineFactory } from './services/engine.factory';
 import { GameService } from './services/game.service';
+import { HexagonGridService } from './services/hexagon-grid.service';
+import { HexagonOperationService } from './services/hexagon-operation.service';
 
 @NgModule({
   imports: [
@@ -45,6 +47,8 @@ import { GameService } from './services/game.service';
     HexagonCoordsConverterService,
     EngineFactory,
     GameService,
+    HexagonGridService,
+    HexagonOperationService,
   ],
   bootstrap: [
     AppComponent,
