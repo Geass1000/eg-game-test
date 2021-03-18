@@ -9,6 +9,11 @@ import { GameParamsArbiter } from './game-params.arbiter';
 import { EngineFactory } from './engine.factory';
 import { GameService } from './game.service';
 
+export interface MergeHexagonsDescriptor {
+  changed: boolean;
+  hexagons: HexagonManager<number>[];
+}
+
 @Injectable()
 export class GameItemsArbiter extends BaseService {
   #hexagons: HexagonManager<number>[];
@@ -80,6 +85,7 @@ export class GameItemsArbiter extends BaseService {
     const mainAxis = this.getMainAxisByDirection(moveDirection);
     const gameGridSize = this.gameParamsArbiter.gameGridRadius - 1;
 
+    let mergeWas = false;
     const allMergedHexagons: HexagonManager<number>[] = [];
     // Merge all hexagon on every main axis value
     for (let axisValue = -gameGridSize; axisValue <= gameGridSize; axisValue++) {
@@ -93,21 +99,17 @@ export class GameItemsArbiter extends BaseService {
         continue;
       }
 
-      // If there is 1 hexagon on the main axis (axisValue)
-      if (hexagonsByDirection.length === 1) {
-        allMergedHexagons.push(hexagonsByDirection[0]);
-        continue;
-      }
+      const mergeHexagonsDescriptor = this.mergeHexagons(axisValue, hexagonsByDirection, moveDirection);
 
-      const axisMergedHexagons = this.mergeHexagons(axisValue, hexagonsByDirection, moveDirection);
+      mergeWas = mergeWas || mergeHexagonsDescriptor.changed;
 
       // FYI: We use a `forEach` + `push` because `concat` takes more resources
-      _.forEach(axisMergedHexagons, (mergedHexagon) => {
+      _.forEach(mergeHexagonsDescriptor.hexagons, (mergedHexagon) => {
         allMergedHexagons.push(mergedHexagon);
       });
     }
 
-    if (allMergedHexagons.length !== this.#hexagons.length) {
+    if (mergeWas === true) {
       this.#hexagons = allMergedHexagons;
       const newHexagons = await this.gameService.getNewHexagons(this.#hexagons);
       this.addHexagons(newHexagons);
@@ -125,7 +127,7 @@ export class GameItemsArbiter extends BaseService {
     mainAxisValue: number,
     hexagons: HexagonManager<number>[],
     moveDirection: Enums.MoveDirection,
-  ): HexagonManager<number>[] {
+  ): MergeHexagonsDescriptor {
     const positiveAxis = this.getPositiveAxisByDirection(moveDirection);
     const sortedHexagons = _.orderBy(hexagons, [ positiveAxis ], [ 'desc' ]);
 
@@ -133,6 +135,7 @@ export class GameItemsArbiter extends BaseService {
     const inversedMoveDirection = this.inverseDirection(moveDirection);
     const negativeDirectionOffset = this.getOffsetByDirection(inversedMoveDirection);
 
+    let mergeWas = false;
     let i = 0;
     const mergedHexagons: HexagonManager<number>[] = [];
     // Last hexagon won't have a pair, so we won't merge it and will add it to an array as it is
@@ -157,16 +160,25 @@ export class GameItemsArbiter extends BaseService {
       const toHexagonCoords = toHexagon.getCoordsInCube();
       // FYI[Optimization]: We can create a link-direction array to skip neighboring items which
       // weren't changed in a new iteration
-      const mergedHexagon = toHexagon.value === hexagonValue
-        && this.compareHexagonsCoords(toHexagonCoords, maxPositiveHexagonCoords) === true
-        ? toHexagon : this.engineFactory.createHexagonManager(maxPositiveHexagonCoords, hexagonValue);
+
+      let mergedHexagon: HexagonManager<number>;
+      if (toHexagon.value === hexagonValue
+        && this.compareHexagonsCoords(toHexagonCoords, maxPositiveHexagonCoords) === true) {
+        mergedHexagon = toHexagon;
+      } else {
+        mergedHexagon = this.engineFactory.createHexagonManager(maxPositiveHexagonCoords, hexagonValue);
+        mergeWas = true;
+      }
       mergedHexagons.push(mergedHexagon);
 
       // Move max positive coords to -1 position by the main axis
       maxPositiveHexagonCoords = this.addCoords(maxPositiveHexagonCoords, negativeDirectionOffset);
     }
 
-    return mergedHexagons;
+    return {
+      changed: mergeWas === true,
+      hexagons: mergedHexagons,
+    };
   }
 
   /**
@@ -240,7 +252,7 @@ export class GameItemsArbiter extends BaseService {
     const negativeAxis = this.getNegativeAxisByDirection(moveDirection);
 
     // FYI: We convert value to `any` because we can't make different types for
-    // main, merge and rest axies.
+    // main, merge and rest axes.
     return {
       type: Enums.HexagonCoordsType.Cube,
       [mainAxis]: mainAxisValue,
