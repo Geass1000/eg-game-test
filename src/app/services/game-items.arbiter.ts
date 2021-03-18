@@ -83,10 +83,10 @@ export class GameItemsArbiter extends BaseService {
     const allMergedHexagons: HexagonManager<number>[] = [];
     // Merge all hexagon on every main axis value
     for (let axisValue = -gameGridSize; axisValue <= gameGridSize; axisValue++) {
-      const hexagonsByDirection = _.filter(
-        this.#hexagons,
-        [ mainAxis, axisValue ],
-      );
+      const hexagonsByDirection = _.filter(this.#hexagons, (hexagon) => {
+        const hexagonCoords = hexagon.getCoordsInCube();
+        return hexagonCoords[mainAxis] === axisValue;
+      });
 
       // If there are 0 hexagons on the main axis (axisValue)
       if (hexagonsByDirection.length === 0) {
