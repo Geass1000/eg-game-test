@@ -181,7 +181,7 @@ export class GameAreaArbiter extends BaseService {
     hexagon: HexagonManager,
   ): number {
     const axialCoords = hexagon.getCoordsInAxial();
-    const x = this.gameParamsArbiter.cHexagonRadius * (3/2 * axialCoords.row);
+    const x = this.gameParamsArbiter.cHexagonRadius * (3/2 * axialCoords.col);
     return x + this.gameAreaXCenter;
   }
 
@@ -195,8 +195,8 @@ export class GameAreaArbiter extends BaseService {
     hexagon: HexagonManager,
   ): number {
     const axialCoords = hexagon.getCoordsInAxial();
-    const y = this.gameParamsArbiter.cHexagonRadius * (
-      Math.sqrt(3) / 2 * axialCoords.row  +  Math.sqrt(3) * axialCoords.col);
+    const y = this.gameParamsArbiter.cHexagonRadius * Math.sqrt(3) * (
+      axialCoords.col / 2  +  axialCoords.row);
     return y + this.gameAreaYCenter;
   }
 }
