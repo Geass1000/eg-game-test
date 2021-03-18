@@ -6,6 +6,7 @@ import isFunction from 'lodash/isFunction';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
 import orderBy from 'lodash/orderBy';
+import forEach from 'lodash/forEach';
 import concat from 'lodash/concat';
 import type { LoDashStatic } from 'lodash';
 
@@ -18,6 +19,7 @@ const lodash = {
   map,
   filter,
   orderBy,
+  forEach,
   concat,
 } as LoDashStatic;
 
