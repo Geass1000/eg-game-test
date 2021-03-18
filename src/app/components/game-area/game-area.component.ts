@@ -5,9 +5,8 @@ import {
   OnInit,
 } from '@angular/core';
 
-import * as Shared from '../../shared';
+import { BaseComponent, Enums } from '../../shared';
 
-import { EngineFactory } from '../../services/engine.factory';
 import { GameParamsArbiter } from '../../services/game-params.arbiter';
 import { GameAreaArbiter } from '../../services/game-area.arbiter';
 import { GameItemsArbiter } from '../../services/game-items.arbiter';
@@ -18,7 +17,7 @@ import { GameItemsArbiter } from '../../services/game-items.arbiter';
   styleUrls: [ './game-area.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GameAreaComponent extends Shared.BaseComponent implements OnInit {
+export class GameAreaComponent extends BaseComponent implements OnInit {
   public gameAreaWidth: number;
   public gameAreaHeight: number;
 
@@ -26,7 +25,6 @@ export class GameAreaComponent extends Shared.BaseComponent implements OnInit {
     protected changeDetection: ChangeDetectorRef,
     // Services
     private gameParamsArbiter: GameParamsArbiter,
-    private engineFactory: EngineFactory,
     public gameAreaArbiter: GameAreaArbiter,
     public gameItemsArbiter: GameItemsArbiter,
   ) {

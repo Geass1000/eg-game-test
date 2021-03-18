@@ -5,13 +5,13 @@ import {
   OnInit,
 } from '@angular/core';
 
-import * as Shared from '../../shared';
+import { Interfaces, BaseComponent } from '../../shared';
 
-import * as Managers from '../../managers';
-import { EngineFactory } from '../../services/engine.factory';
 import { GameParamsArbiter } from '../../services/game-params.arbiter';
 import { GameAreaArbiter } from '../../services/game-area.arbiter';
 import { GameItemsArbiter } from '../../services/game-items.arbiter';
+
+type Hexagon = Interfaces.Hexagon<number>;
 
 @Component({
   selector: 'eg-game-items',
@@ -19,17 +19,16 @@ import { GameItemsArbiter } from '../../services/game-items.arbiter';
   styleUrls: [ './game-items.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GameItemsComponent extends Shared.BaseComponent implements OnInit {
+export class GameItemsComponent extends BaseComponent implements OnInit {
   /**
    * List of hexagons which we show a user as a game items.
    */
-  public hexagons: Managers.HexagonManager<number>[];
+  public hexagons: Hexagon[];
 
   constructor (
     protected changeDetection: ChangeDetectorRef,
     // Services
     private gameParamsArbiter: GameParamsArbiter,
-    private engineFactory: EngineFactory,
     public gameAreaArbiter: GameAreaArbiter,
     public gameItemsArbiter: GameItemsArbiter,
   ) {

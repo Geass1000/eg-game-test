@@ -3,9 +3,9 @@ import { Subject } from 'rxjs';
 import type { Observable } from 'rxjs';
 
 import { GameParamsArbiter } from './game-params.arbiter';
-import { HexagonManager } from '../managers';
 
-import { BaseService } from '../shared/base.service';
+import { Interfaces, BaseService } from '../shared';
+import { HexagonCoordsConverterService } from './hexagon-coords-converter.service';
 
 @Injectable()
 export class GameAreaArbiter extends BaseService {
@@ -49,6 +49,7 @@ export class GameAreaArbiter extends BaseService {
 
   constructor (
     private gameParamsArbiter: GameParamsArbiter,
+    private hexagonCoordsConverterService: HexagonCoordsConverterService,
   ) {
     super();
 
@@ -174,13 +175,13 @@ export class GameAreaArbiter extends BaseService {
   /**
    * Calculates and returns an X Cartesian coordinate of the hexagon by its Axial coords.
    *
-   * @param  {HexagonManager} hexagon
+   * @param  {Interfaces.Hexagon} hexagon
    * @return {number}
    */
   getXCoord (
-    hexagon: HexagonManager,
+    hexagon: Interfaces.Hexagon,
   ): number {
-    const axialCoords = hexagon.getCoordsInAxial();
+    const axialCoords = this.hexagonCoordsConverterService.convertCubeToAxial(hexagon);
     const x = this.gameParamsArbiter.cHexagonRadius * (3/2 * axialCoords.col);
     return x + this.gameAreaXCenter;
   }
@@ -188,13 +189,13 @@ export class GameAreaArbiter extends BaseService {
   /**
    * Calculates and returns an Y Cartesian coordinate of the hexagon by its Axial coords.
    *
-   * @param  {HexagonManager} hexagon
+   * @param  {Interfaces.Hexagon} hexagon
    * @return {number}
    */
   getYCoord (
-    hexagon: HexagonManager,
+    hexagon: Interfaces.Hexagon,
   ): number {
-    const axialCoords = hexagon.getCoordsInAxial();
+    const axialCoords = this.hexagonCoordsConverterService.convertCubeToAxial(hexagon);
     const y = this.gameParamsArbiter.cHexagonRadius * Math.sqrt(3) * (
       axialCoords.col / 2  +  axialCoords.row);
     return y + this.gameAreaYCenter;

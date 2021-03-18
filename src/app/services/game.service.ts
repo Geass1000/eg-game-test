@@ -6,7 +6,6 @@ import { Interfaces } from '../shared';
 import { environment } from '../../environments/environment';
 
 import { GameParamsArbiter } from './game-params.arbiter';
-import { EngineFactory } from './engine.factory';
 
 @Injectable()
 export class GameService {
@@ -14,7 +13,6 @@ export class GameService {
   constructor (
     private http: HttpClient,
     // Services
-    private engineFactory: EngineFactory,
     private gameParamsArbiter: GameParamsArbiter,
   ) {
   }

@@ -178,42 +178,36 @@ export class HexagonGridService {
     switch (moveDirection) {
       case Enums.MoveDirection.TopRight:
         return {
-          type: Enums.HexagonCoordsType.Cube,
           x: +1,
           y: 0,
           z: -1,
         };
       case Enums.MoveDirection.TopLeft:
         return {
-          type: Enums.HexagonCoordsType.Cube,
           x: -1,
           y: +1,
           z: 0,
         };
       case Enums.MoveDirection.Top:
         return {
-          type: Enums.HexagonCoordsType.Cube,
           x: 0,
           y:  +1,
           z: -1,
         };
       case Enums.MoveDirection.BottomRight:
         return {
-          type: Enums.HexagonCoordsType.Cube,
           x: +1,
           y: -1,
           z: 0,
         };
       case Enums.MoveDirection.BottomLeft:
         return {
-          type: Enums.HexagonCoordsType.Cube,
           x: -1,
           y: 0,
           z: +1,
         };
       case Enums.MoveDirection.Bottom:
         return {
-          type: Enums.HexagonCoordsType.Cube,
           x: 0,
           y: -1,
           z: +1,

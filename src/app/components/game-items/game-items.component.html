@@ -1,9 +1,9 @@
 
 <eg-hexagon
   *ngFor="let hexagon of hexagons"
-  [attr.data-x]="hexagon.getCoordsInCube().x"
-  [attr.data-y]="hexagon.getCoordsInCube().y"
-  [attr.data-z]="hexagon.getCoordsInCube().z"
+  [attr.data-x]="hexagon.x"
+  [attr.data-y]="hexagon.y"
+  [attr.data-z]="hexagon.z"
   [style.left.px]="gameAreaArbiter.getXCoord(hexagon)"
   [style.top.px]="gameAreaArbiter.getYCoord(hexagon)"
   [value]="hexagon.value"

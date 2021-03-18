@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Interfaces, Enums } from '../shared';
-
-import { GameParamsArbiter } from './game-params.arbiter';
+import { Interfaces } from '../shared';
 
 @Injectable()
 export class HexagonOperationService {
@@ -54,7 +52,6 @@ export class HexagonOperationService {
     coords2: Interfaces.HexagonCubeCoords,
   ): Interfaces.HexagonCubeCoords {
     return {
-      type: Enums.HexagonCoordsType.Cube,
       x: coords1.x + coords2.x,
       y: coords1.y + coords2.y,
       z: coords1.z + coords2.z,

@@ -5,7 +5,6 @@ import type { Observable } from 'rxjs';
 import { Enums, BaseService, Interfaces } from '../shared';
 
 import { GameParamsArbiter } from './game-params.arbiter';
-import { EngineFactory } from './engine.factory';
 import { GameService } from './game.service';
 import { HexagonGridService } from './hexagon-grid.service';
 import { HexagonOperationService } from './hexagon-operation.service';
@@ -32,7 +31,6 @@ export class GameItemsArbiter extends BaseService {
 
   constructor (
     // Services
-    private engineFactory: EngineFactory,
     private gameParamsArbiter: GameParamsArbiter,
     private gameService: GameService,
     private hexagonGridService: HexagonGridService,

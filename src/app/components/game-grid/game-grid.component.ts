@@ -5,12 +5,13 @@ import {
   OnInit,
 } from '@angular/core';
 
-import * as Shared from '../../shared';
+import { Interfaces, Enums, BaseComponent } from '../../shared';
 
-import * as Managers from '../../managers';
-import { EngineFactory } from '../../services/engine.factory';
 import { GameParamsArbiter } from '../../services/game-params.arbiter';
 import { GameAreaArbiter } from '../../services/game-area.arbiter';
+import { HexagonCoordsConverterService } from '../../services/hexagon-coords-converter.service';
+
+type Hexagon = Interfaces.Hexagon<number>;
 
 @Component({
   selector: 'eg-game-grid',
@@ -18,11 +19,11 @@ import { GameAreaArbiter } from '../../services/game-area.arbiter';
   styleUrls: [ './game-grid.component.scss' ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GameGridComponent extends Shared.BaseComponent implements OnInit {
+export class GameGridComponent extends BaseComponent implements OnInit {
   /**
    * List of hexagons which we use to build the grid.
    */
-  public gridHexagons: Managers.HexagonManager<void>[];
+  public gridHexagons: Hexagon[];
 
   /**
    * Number of hexagons in every axis.
@@ -33,8 +34,8 @@ export class GameGridComponent extends Shared.BaseComponent implements OnInit {
     protected changeDetection: ChangeDetectorRef,
     // Services
     private gameParamsArbiter: GameParamsArbiter,
-    private engineFactory: EngineFactory,
     public gameAreaArbiter: GameAreaArbiter,
+    public hexagonCoordsConverterService: HexagonCoordsConverterService,
   ) {
     super(changeDetection);
   }
@@ -90,13 +91,13 @@ export class GameGridComponent extends Shared.BaseComponent implements OnInit {
     // and remove all wrong hexagons.
     for (let row = -this.gridSize; row <= this.gridSize; row++) {
       for (let col = -this.gridSize; col <= this.gridSize; col++) {
-        const hexagon = this.engineFactory.createHexagonManager({
-          type: Shared.Enums.HexagonCoordsType.Axial,
-          col: col,
-          row: row,
-        });
-
-        const cubeCoords = hexagon.getCoordsInCube();
+        const cubeCoords = this.hexagonCoordsConverterService.convertAnyToCube(
+          Enums.HexagonCoordsType.Axial,
+          {
+            col: col,
+            row: row,
+          },
+        );
 
         // Skip hexagons which are outside game grid radius
         if (Math.abs(cubeCoords.x) > this.gridSize
@@ -109,7 +110,7 @@ export class GameGridComponent extends Shared.BaseComponent implements OnInit {
         // FYI: The sum of all coordinates must be equal to 0
         const coordsSum = cubeCoords.x + cubeCoords.y + cubeCoords.z;
         if (coordsSum === 0) {
-          hexagons.push(hexagon);
+          hexagons.push(cubeCoords);
         }
       }
     }

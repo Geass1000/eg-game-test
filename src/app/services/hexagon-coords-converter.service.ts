@@ -18,7 +18,6 @@ export class HexagonCoordsConverterService {
     cubeCoords: Interfaces.HexagonCubeCoords,
   ): Interfaces.HexagonAxialCoords {
     const axialCoords: Interfaces.HexagonAxialCoords = {
-      type: Enums.HexagonCoordsType.Axial,
       col: cubeCoords.x,
       row: cubeCoords.z,
     };
@@ -35,7 +34,6 @@ export class HexagonCoordsConverterService {
     cubeCoords: Interfaces.HexagonCubeCoords,
   ): Interfaces.HexagonOffsetCoords {
     const offsetCoords: Interfaces.HexagonOffsetCoords = {
-      type: Enums.HexagonCoordsType.Offset,
       col: cubeCoords.x,
       row: cubeCoords.z + (cubeCoords.x - (cubeCoords.x & 1)) / 2,
     };
@@ -45,10 +43,24 @@ export class HexagonCoordsConverterService {
   /**
    * Converts coordinates to `Offset` coordinates.
    *
+   * @param  {Enums.HexagonCoordsType} coordsType
    * @param  {Interfaces.HexagonCoords} coords
    * @return {Interfaces.HexagonCubeCoords}
    */
   convertAnyToCube (
+    coordsType: Enums.HexagonCoordsType.Offset,
+    coords: Interfaces.HexagonOffsetCoords,
+  ): Interfaces.HexagonCubeCoords;
+  convertAnyToCube (
+    coordsType: Enums.HexagonCoordsType.Axial,
+    coords: Interfaces.HexagonAxialCoords,
+  ): Interfaces.HexagonCubeCoords;
+  convertAnyToCube (
+    coordsType: Enums.HexagonCoordsType.Cube,
+    coords: Interfaces.HexagonCubeCoords,
+  ): Interfaces.HexagonCubeCoords;
+  convertAnyToCube (
+    coordsType: Enums.HexagonCoordsType,
     coords: Interfaces.HexagonCoords,
   ): Interfaces.HexagonCubeCoords {
     if (_.isObject(coords) === false || _.isNil(coords) === true) {
@@ -56,32 +68,33 @@ export class HexagonCoordsConverterService {
         + `Coords argument must be an object.`);
     }
 
-    switch (coords.type) {
+    switch (coordsType) {
       case Enums.HexagonCoordsType.Axial: {
-        const x = coords.col;
-        const z = coords.row;
+        const axialCoords = coords as Interfaces.HexagonAxialCoords;
+        const x = axialCoords.col;
+        const z = axialCoords.row;
 
         return {
-          type: Enums.HexagonCoordsType.Cube,
-          x: coords.col,
+          x: axialCoords.col,
           y: -(x + z),
-          z: coords.row,
+          z: axialCoords.row,
         };
       }
       case Enums.HexagonCoordsType.Offset: {
-        const x = coords.col;
+        const offsetCoords = coords as Interfaces.HexagonOffsetCoords;
+        const x = offsetCoords.col;
         // & 1 = % 2 for positive and negative values
-        const z = coords.row - (coords.col - (coords.col & 1)) / 2;
+        const z = offsetCoords.row - (offsetCoords.col - (offsetCoords.col & 1)) / 2;
 
         return {
-          type: Enums.HexagonCoordsType.Cube,
           x: x,
           y: -(x + z),
           z: z,
         };
       }
       case Enums.HexagonCoordsType.Cube: {
-        return coords;
+        const cubeCoords = coords as Interfaces.HexagonCubeCoords;
+        return cubeCoords;
       }
     }
   }
