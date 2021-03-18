@@ -4,6 +4,8 @@
   class="hexagon-area"
   [style.width.px]="gameAreaWidth"
   [style.height.px]="gameAreaHeight"
+
+  egKeyEvent (keyDown)="onKeyDown($event)"
 >
   <eg-game-grid></eg-game-grid>
   <eg-game-items></eg-game-items>
