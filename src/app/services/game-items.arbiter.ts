@@ -231,7 +231,8 @@ export class GameItemsArbiter extends BaseService {
     moveDirection: Enums.MoveDirection,
   ): Interfaces.HexagonCubeCoords {
     const gridSize = this.gameParamsArbiter.gameGridRadius - 1;
-    const positiveAxisValue = gridSize - mainAxisValue;
+    const positiveAxisValue = mainAxisValue <= 0
+      ? gridSize : gridSize - mainAxisValue;
     const negativeAxisValue = -(mainAxisValue + positiveAxisValue);
 
     const mainAxis = this.getMainAxisByDirection(moveDirection);
