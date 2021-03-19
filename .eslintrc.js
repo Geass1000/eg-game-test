@@ -122,5 +122,8 @@ module.exports =  {
     'object-curly-spacing': [ 'error', 'always' ],
     'no-extra-semi': 'off',
     'no-empty': 'off',
+    'no-constant-condition': [ 'warn', {
+      'checkLoops': false,
+    }],
   },
 };
