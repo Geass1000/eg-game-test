@@ -140,6 +140,20 @@ export class HexagonGridService {
     } as any;
   }
 
+  /**
+   * Returns max negative value in the main line by the direction.
+   *
+   * @param  {number} mainAxisValue
+   * @param  {Enums.MoveDirection} moveDirection
+   * @return {Interfaces.Hexagon}
+   */
+  getMaxNegativeHexagonCoords (
+    mainAxisValue: number,
+    moveDirection: Enums.MoveDirection,
+  ): Interfaces.HexagonCubeCoords {
+    const inversedDirection = this.inverseDirection(moveDirection);
+    return this.getMaxPositiveHexagonCoords(mainAxisValue, inversedDirection);
+  }
 
   /**
    * Returns an inversion of the direction.
