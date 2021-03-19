@@ -10,6 +10,8 @@ import { Interfaces, Enums, BaseComponent } from '../../shared';
 import { GameParamsArbiter } from '../../services/game-params.arbiter';
 import { GameAreaArbiter } from '../../services/game-area.arbiter';
 import { HexagonCoordsConverterService } from '../../services/hexagon-coords-converter.service';
+import { HexagonGridService } from '../../services/hexagon-grid.service';
+import { HexagonOperationService } from '../../services/hexagon-operation.service';
 
 type Hexagon = Interfaces.Hexagon<number>;
 
@@ -35,6 +37,8 @@ export class GameGridComponent extends BaseComponent implements OnInit {
     // Services
     private gameParamsArbiter: GameParamsArbiter,
     public gameAreaArbiter: GameAreaArbiter,
+    public hexagonGridService: HexagonGridService,
+    public hexagonOperationService: HexagonOperationService,
     public hexagonCoordsConverterService: HexagonCoordsConverterService,
   ) {
     super(changeDetection);
@@ -87,31 +91,24 @@ export class GameGridComponent extends BaseComponent implements OnInit {
   updateListOfHexagons (
   ): void {
     const hexagons = [];
-    // FYI: We use an Axial coordinates to build 2D array of possible coordinates
-    // and remove all wrong hexagons.
-    for (let row = -this.gridSize; row <= this.gridSize; row++) {
-      for (let col = -this.gridSize; col <= this.gridSize; col++) {
-        const cubeCoords = this.hexagonCoordsConverterService.convertAnyToCube(
-          Enums.HexagonCoordsType.Axial,
-          {
-            col: col,
-            row: row,
-          },
-        );
+    const inversedDirection = this.hexagonGridService.inverseDirection(Enums.MoveDirection.Bottom);
+    const negativeDirectionOffset = this.hexagonGridService.getOffsetByDirection(inversedDirection);
 
-        // Skip hexagons which are outside game grid radius
-        if (Math.abs(cubeCoords.x) > this.gridSize
-            || Math.abs(cubeCoords.y) > this.gridSize
-            || Math.abs(cubeCoords.z) > this.gridSize) {
-          continue;
+    // FYI: We use an Cube coordinates to build grid
+    for (let mainAxis = -this.gridSize; mainAxis <= this.gridSize; mainAxis++) {
+      const maxPositiveHexagon = this.hexagonGridService
+        .getMaxPositiveHexagonCoords(mainAxis, Enums.MoveDirection.Bottom);
+      const maxNegativeHexagon = this.hexagonGridService
+        .getMaxNegativeHexagonCoords(mainAxis, Enums.MoveDirection.Bottom);
+
+      let nextHexagon = maxPositiveHexagon;
+      while (true) {
+        hexagons.push(nextHexagon);
+        if (this.hexagonOperationService.compareHexagonsCoords(nextHexagon, maxNegativeHexagon) === true) {
+          break;
         }
 
-        // Skip hexagons which have wrong coordinates
-        // FYI: The sum of all coordinates must be equal to 0
-        const coordsSum = cubeCoords.x + cubeCoords.y + cubeCoords.z;
-        if (coordsSum === 0) {
-          hexagons.push(cubeCoords);
-        }
+        nextHexagon = this.hexagonOperationService.addCoords(nextHexagon, negativeDirectionOffset);
       }
     }
 
