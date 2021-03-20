@@ -4,8 +4,11 @@
   position: absolute;
 }
 
+$transition-duration: 0.2s;
 eg-hexagon {
   position: absolute;
 
   transform: translate(-50%, -50%);
+
+  transition: $transition-duration left ease-out, $transition-duration top ease-out;
 }

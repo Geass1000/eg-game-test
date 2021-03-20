@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 
-import { BaseComponent, Enums } from '../../shared';
+import { BaseComponent } from '../../shared';
 
 import { GameParamsArbiter } from '../../services/game-params.arbiter';
 import { GameAreaArbiter } from '../../services/game-area.arbiter';
@@ -56,48 +56,5 @@ export class GameAreaComponent extends BaseComponent implements OnInit {
     this.gameAreaHeight = this.gameAreaArbiter.gameAreaHeight;
     this.gameAreaWidth = this.gameAreaArbiter.gameAreaWidth;
     this.render();
-  }
-
-  /**
-   * Handles window Key Down event.
-   *  - merges all hexagons by the direction.
-   *
-   * @param   {KeyboardEvent} event
-   * @returns {void}
-   */
-  async onKeyDown (
-    event: KeyboardEvent,
-  ): Promise<void> {
-    console.log(`---- KEY DOWN`, event);
-
-    const moveDirection = this.getDirectionByKeyCode(event.code);
-    if (_.isNil(moveDirection) === true) {
-      return;
-    }
-    await this.gameItemsArbiter.mergeAllHexagons(moveDirection);
-  }
-
-  /**
-   * Returns a direction by the key code.
-   *
-   * @param  {Enums.KeyCode|string} keyCode
-   */
-  getDirectionByKeyCode (
-    keyCode: Enums.KeyCode | string,
-  ): Enums.MoveDirection {
-    switch (keyCode) {
-      case Enums.KeyCode.KeyW:
-        return Enums.MoveDirection.Top;
-      case Enums.KeyCode.KeyS:
-        return Enums.MoveDirection.Bottom;
-      case Enums.KeyCode.KeyE:
-        return Enums.MoveDirection.TopRight;
-      case Enums.KeyCode.KeyA:
-        return Enums.MoveDirection.BottomLeft;
-      case Enums.KeyCode.KeyQ:
-        return Enums.MoveDirection.TopLeft;
-      case Enums.KeyCode.KeyD:
-        return Enums.MoveDirection.BottomRight;
-    }
   }
 }
