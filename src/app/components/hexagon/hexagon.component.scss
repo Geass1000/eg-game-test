@@ -4,16 +4,57 @@
 }
 
 path {
-  fill: none;
-  stroke: black;
+  fill: #d9c9ba;
+  stroke: #bcab9c;
   stroke-width: 5px;
 }
 
 text {
+  fill: white;
   font-size: 34px;
   font-family: monospace;
   text-anchor: middle;
   alignment-baseline: middle;
 
   pointer-events: none;
+}
+
+$hexagonColors: (
+  2: #efe3d7,
+  4: #ede0c8,
+  8: #efb179,
+  16: #ed9263,
+  32: #ea785f,
+  64: #e75838,
+  128: #efcf73,
+  256: #efcb63,
+  512: #efc751,
+  1024: #efc43c,
+  2048: #efc22f,
+  4096: #e64e3d,
+  8192: #e65156,
+  16384: #e64f41,
+  32768: #72b2d6,
+  65536: #5a9fde,
+  131072: #2b82ce,
+);
+
+$hexagonTextColor: (
+  2: #776d63,
+  4: #71685e,
+);
+
+@each $value, $color in $hexagonColors {
+  [data-value="#{$value}"] {
+    path {
+      fill: $color;
+    }
+  }
+}
+@each $value, $color in $hexagonTextColor {
+  [data-value="#{$value}"] {
+    text {
+      fill: $color;
+    }
+  }
 }

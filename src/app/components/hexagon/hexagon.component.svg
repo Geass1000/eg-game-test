@@ -1,4 +1,9 @@
-<svg [attr.viewBox]="viewBox" [style.width]="width" [style.height]="height">
-  <path [attr.d]="path" />
-  <text x="50%" y="50%" class="small">{{ value }}</text>
+<svg
+  [attr.viewBox]="viewBox"
+  [style.width]="width"
+  [style.height]="height"
+  [attr.data-value]="value"
+>
+  <path class="hexagon" [attr.d]="path" />
+  <text x="50%" y="50%" class="hexagon-text" *ngIf="value">{{ value }}</text>
 </svg>
