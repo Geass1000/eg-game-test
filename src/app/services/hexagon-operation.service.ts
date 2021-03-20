@@ -10,6 +10,23 @@ export class HexagonOperationService {
   }
 
   /**
+   * Clones the hexagon and returns cloned one.
+   *
+   * @param  {Interfaces.Hexagon} hexagon
+   * @return {Interfaces.Hexagon}
+   */
+  cloneHexagon (
+    hexagon: Interfaces.Hexagon,
+  ): Interfaces.Hexagon {
+    return {
+      x: hexagon.x,
+      y: hexagon.y,
+      z: hexagon.z,
+      value: hexagon.value,
+    };
+  }
+
+  /**
    * Returns `true` if hexagons are equal.
    *
    * @param  {Interfaces.Hexagon} hexagon1
