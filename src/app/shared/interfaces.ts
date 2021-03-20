@@ -18,3 +18,14 @@ export type HexagonCoords = HexagonOffsetCoords | HexagonAxialCoords | HexagonCu
 export interface Hexagon <THexagonValue = any> extends HexagonCubeCoords {
   value?: THexagonValue;
 }
+
+export interface HexagonAction <THexagonValue = any> {
+  from: Hexagon<THexagonValue>;
+  to: Hexagon<THexagonValue>;
+}
+
+export interface MergeHexagonsDescriptor {
+  changed: boolean;
+  actions: HexagonAction<number>[];
+  hexagons: Hexagon<number>[];
+}

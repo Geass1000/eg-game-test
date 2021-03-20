@@ -11,11 +11,6 @@ import { HexagonOperationService } from './hexagon-operation.service';
 
 type Hexagon = Interfaces.Hexagon<number>;
 
-export interface MergeHexagonsDescriptor {
-  changed: boolean;
-  hexagons: Hexagon[];
-}
-
 @Injectable()
 export class GameItemsArbiter extends BaseService {
   #hexagons: Hexagon[];
@@ -84,12 +79,13 @@ export class GameItemsArbiter extends BaseService {
    */
   async mergeAllHexagons (
     moveDirection: Enums.MoveDirection,
-  ): Promise<void> {
+  ): Promise<Interfaces.MergeHexagonsDescriptor> {
     const mainAxis = this.hexagonGridService.getMainAxisByDirection(moveDirection);
     const gameGridSize = this.gameParamsArbiter.gameGridRadius - 1;
 
     let mergeWas = false;
     const allMergedHexagons: Hexagon[] = [];
+    const allHexagonsActions: Interfaces.HexagonAction[] = [];
     // Merge all hexagon on every main axis value
     for (let axisValue = -gameGridSize; axisValue <= gameGridSize; axisValue++) {
       const hexagonsByDirection = _.filter(this.#hexagons, [ mainAxis, axisValue ]);
@@ -107,6 +103,9 @@ export class GameItemsArbiter extends BaseService {
       _.forEach(mergeHexagonsDescriptor.hexagons, (mergedHexagon) => {
         allMergedHexagons.push(mergedHexagon);
       });
+      _.forEach(mergeHexagonsDescriptor.actions, (hexagonsAction) => {
+        allHexagonsActions.push(hexagonsAction);
+      });
     }
 
     if (mergeWas === true) {
@@ -114,6 +113,12 @@ export class GameItemsArbiter extends BaseService {
       const newHexagons = await this.gameService.getNewHexagons(this.#hexagons);
       this.addHexagons(newHexagons);
     }
+
+    return {
+      changed: mergeWas,
+      actions: allHexagonsActions,
+      hexagons: this.#hexagons,
+    };
   }
 
   /**
@@ -127,7 +132,7 @@ export class GameItemsArbiter extends BaseService {
     mainAxisValue: number,
     hexagons: Hexagon[],
     moveDirection: Enums.MoveDirection,
-  ): MergeHexagonsDescriptor {
+  ): Interfaces.MergeHexagonsDescriptor {
     const positiveAxis = this.hexagonGridService.getPositiveAxisByDirection(moveDirection);
     const sortedHexagons = _.orderBy(hexagons, [ positiveAxis ], [ 'desc' ]);
 
@@ -138,23 +143,25 @@ export class GameItemsArbiter extends BaseService {
     let mergeWas = false;
     let i = 0;
     const mergedHexagons: Hexagon[] = [];
+    const hexagonActions: Interfaces.HexagonAction<number>[] = [];
     // Last hexagon won't have a pair, so we won't merge it and will add it to an array as it is
     while (i < sortedHexagons.length) {
       const toHexagon = sortedHexagons[i];
       const mergeHexagon = sortedHexagons[i + 1];
       let hexagonValue: number;
+      let numOfSteps: number;
       if (this.hexagonOperationService.canBeMerged(toHexagon, mergeHexagon) === false) {
         // If we can't merge ToHexagon with MergeHexagon we will add ToHexagon to result array
         // and skip ToHexagon
         hexagonValue = toHexagon.value;
         // Skip ToHexagon (1)
-        i++;
+        numOfSteps = 1;
       } else {
         // If we can merge ToHexagon with MergeHexagon we will add MergedHexagon to result array
         // and skip ToHexagon and MergeHexagon
         hexagonValue = toHexagon.value * 2;
         // Skip ToHexagon and MergeHexagon (2)
-        i += 2;
+        numOfSteps = 2;
       }
 
       // FYI[Optimization]: We can create a link-direction array to skip neighboring items which
@@ -168,6 +175,17 @@ export class GameItemsArbiter extends BaseService {
           ...maxPositiveHexagonCoords,
           value: hexagonValue,
         };
+
+        hexagonActions.push({
+          from: toHexagon,
+          to: mergedHexagon,
+        });
+        if (numOfSteps === 2) {
+          hexagonActions.push({
+            from: mergeHexagon,
+            to: mergedHexagon,
+          });
+        }
         mergeWas = true;
       }
       mergedHexagons.push(mergedHexagon);
@@ -175,10 +193,13 @@ export class GameItemsArbiter extends BaseService {
       // Move max positive coords to -1 position by the main axis
       maxPositiveHexagonCoords = this.hexagonOperationService
         .addCoords(maxPositiveHexagonCoords, negativeDirectionOffset);
+
+      i += numOfSteps;
     }
 
     return {
       changed: mergeWas === true,
+      actions: hexagonActions,
       hexagons: mergedHexagons,
     };
   }
