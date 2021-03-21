@@ -13,6 +13,7 @@ import { GameItemsComponent } from './components/game-items';
 
 // Directives
 import { KeyEventDirective } from './directives/key-event.directive';
+import { ClickDelegateDirective } from './directives/click-delegate.directive';
 
 // Services
 import { GameParamsArbiter } from './services/game-params.arbiter';
@@ -38,6 +39,7 @@ import { HexagonOperationService } from './services/hexagon-operation.service';
     GameItemsComponent,
     // Directives
     KeyEventDirective,
+    ClickDelegateDirective,
   ],
   providers: [
     GameParamsArbiter,

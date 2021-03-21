@@ -1,3 +1,27 @@
+
+export interface ClickDelegateEvent {
+  /**
+   * data-id attribute
+   */
+  id: string;
+  /**
+   * data-type attribute
+   */
+  type: string;
+  /**
+   * CSS class.
+   */
+  tagSelector: string;
+  /**
+   * Native mouse event.
+   */
+  dataset: DOMStringMap;
+  /**
+   * Native mouse event.
+   */
+  event: MouseEvent;
+}
+
 export interface HexagonCubeCoords {
   x: number;
   y: number;
