@@ -22,6 +22,15 @@ export class GameItemsArbiter extends BaseService {
     return this.#hexagons;
   }
 
+  #lastActions: Interfaces.HexagonAction[];
+  /**
+   * List of last hexagons actions.
+   */
+  get lastActions (
+  ): Interfaces.HexagonAction[] {
+    return this.#lastActions;
+  }
+
   private sjNotif: Subject<void> = new Subject();
 
   constructor (
@@ -109,6 +118,7 @@ export class GameItemsArbiter extends BaseService {
     }
 
     if (mergeWas === true) {
+      this.#lastActions = allHexagonsActions;
       this.#hexagons = allMergedHexagons;
       const newHexagons = await this.gameService.getNewHexagons(this.#hexagons);
       this.addHexagons(newHexagons);
