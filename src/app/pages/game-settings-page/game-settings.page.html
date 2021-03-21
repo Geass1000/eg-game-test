@@ -1,0 +1,23 @@
+<div class="game-title">
+  Hexagonal 2048
+</div>
+
+<div class="game-description">
+  Join the numbers and get to the 2048 tile with a new game mode - Hexagon grid!
+</div>
+
+<div class="select-radius-hint">
+  Select radius:
+</div>
+<div
+  class="select-radius-options"
+  egClickDelegate
+  (dClick)="onClickGameAreaRadius($event)"
+  [tagSelectors]="[ '.game-radius-item' ]"
+>
+  <div
+    class="game-radius-item"
+    *ngFor="let gameRadius of [ 2, 3, 4 ];"
+    [attr.data-id]="gameRadius"
+  >{{ gameRadius }}</div>
+</div>

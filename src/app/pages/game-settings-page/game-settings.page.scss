@@ -1,0 +1,53 @@
+:host {
+  width: 350px;
+  display: block;
+}
+
+.game-title {
+  margin-bottom: 10px;
+
+  font-size: 34px;
+  font-weight: bold;
+}
+
+.game-description {
+  margin-bottom: 25px;
+
+  font-size: 18px;
+}
+
+.select-radius-hint {
+  margin-bottom: 15px;
+
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.select-radius-options {
+  display: flex;
+}
+
+.game-radius-item {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-right: 10px;
+  background-color: #bcab9c;
+  border-radius: 4px;
+
+  color: white;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &:hover {
+    background-color: #ed995b;
+  }
+}
