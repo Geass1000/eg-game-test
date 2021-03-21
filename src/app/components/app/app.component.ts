@@ -73,4 +73,16 @@ export class AppComponent extends BaseComponent implements OnInit {
   ): Promise<void> {
     await this.gameItemsArbiter.$init();
   }
+
+  /**
+   * Triggers a render of UI if router outlet renders component.
+   *
+   * FYI[WORKAROUND]: Angular doesn't trigger component's hooks if we load them via Router.
+   * We observe and `activate` output property to trigger a render manually.
+   *
+   * @return {void}
+   */
+  onRouteActivated (): void {
+    this.render();
+  }
 }
