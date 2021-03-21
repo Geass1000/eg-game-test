@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import type { Observable } from 'rxjs';
 
-import { Enums } from '../shared';
-
 const SmallRadiusParam = Math.sqrt(3) / 2;
 const DefaultRadius = 50;
 const DefaultGameGridRadius = 5;
@@ -11,7 +9,6 @@ const DefaultHexagonStrokeWidth = 5;
 
 @Injectable()
 export class GameParamsArbiter {
-  public gameStatus: Enums.GameStatus;
 
   #gameGridRadius: number;
   set gameGridRadius (

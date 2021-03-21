@@ -11,6 +11,9 @@ import { GameGridComponent } from './components/game-grid';
 import { GameAreaComponent } from './components/game-area';
 import { GameItemsComponent } from './components/game-items';
 
+// Pages
+import { GameSettingsPageComponent } from './pages/game-settings-page';
+
 // Directives
 import { KeyEventDirective } from './directives/key-event.directive';
 import { ClickDelegateDirective } from './directives/click-delegate.directive';
@@ -23,6 +26,7 @@ import { HexagonCoordsConverterService } from './services/hexagon-coords-convert
 import { GameService } from './services/game.service';
 import { HexagonGridService } from './services/hexagon-grid.service';
 import { HexagonOperationService } from './services/hexagon-operation.service';
+import { GameArbiter } from './services/game.arbiter';
 
 @NgModule({
   imports: [
@@ -37,11 +41,14 @@ import { HexagonOperationService } from './services/hexagon-operation.service';
     GameGridComponent,
     GameAreaComponent,
     GameItemsComponent,
+    // Pages
+    GameSettingsPageComponent,
     // Directives
     KeyEventDirective,
     ClickDelegateDirective,
   ],
   providers: [
+    GameArbiter,
     GameParamsArbiter,
     GameAreaArbiter,
     GameItemsArbiter,
