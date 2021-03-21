@@ -9,6 +9,7 @@ import { Interfaces, Enums, BaseComponent } from '../../shared';
 
 import { GameParamsArbiter } from '../../services/game-params.arbiter';
 import { GameAreaArbiter } from '../../services/game-area.arbiter';
+import { GameItemsArbiter } from '../../services/game-items.arbiter';
 import { HexagonCoordsConverterService } from '../../services/hexagon-coords-converter.service';
 import { HexagonGridService } from '../../services/hexagon-grid.service';
 import { HexagonOperationService } from '../../services/hexagon-operation.service';
@@ -26,6 +27,10 @@ export class GameGridComponent extends BaseComponent implements OnInit {
    * List of hexagons which we use to build the grid.
    */
   public gridHexagons: Hexagon[];
+  /**
+   * We use this property to get a fast access to a grid hexagon by its coords.
+   */
+  private gridHexagonMap: Map<string, Hexagon> = new Map();
 
   /**
    * Number of hexagons in every axis.
@@ -37,6 +42,7 @@ export class GameGridComponent extends BaseComponent implements OnInit {
     // Services
     private gameParamsArbiter: GameParamsArbiter,
     public gameAreaArbiter: GameAreaArbiter,
+    public gameItemsArbiter: GameItemsArbiter,
     public hexagonGridService: HexagonGridService,
     public hexagonOperationService: HexagonOperationService,
     public hexagonCoordsConverterService: HexagonCoordsConverterService,
@@ -59,6 +65,12 @@ export class GameGridComponent extends BaseComponent implements OnInit {
         this.render();
       });
     this.registrator.subscribe(gameAreaArbiter$);
+
+    const gameItemsArbiter$ = this.gameItemsArbiter.getObserver()
+      .subscribe(() => {
+        this.setHexagonsValues();
+      });
+    this.registrator.subscribe(gameItemsArbiter$);
 
     this.updateView();
   }
@@ -104,14 +116,37 @@ export class GameGridComponent extends BaseComponent implements OnInit {
       let nextHexagon = maxPositiveHexagon;
       while (true) {
         hexagons.push(nextHexagon);
+        const coordsKey = this.hexagonCoordsConverterService.convertHexagonCoordsToString(nextHexagon);
+        this.gridHexagonMap.set(coordsKey, nextHexagon);
+
         if (this.hexagonOperationService.compareHexagonsCoords(nextHexagon, maxNegativeHexagon) === true) {
           break;
         }
 
         nextHexagon = this.hexagonOperationService.addCoords(nextHexagon, negativeDirectionOffset);
+        nextHexagon.value = 0;
       }
     }
 
     this.gridHexagons = hexagons;
+    this.setHexagonsValues();
+  }
+
+  /**
+   * Finds a coincidence of grid and game hexagons and sets a game hexagon's value to the
+   * gird hexagon.
+   *
+   * @return {void}
+   */
+  setHexagonsValues (
+  ): void {
+    _.forEach(this.gameItemsArbiter.hexagons, (hexagon) => {
+      const coordsKey = this.hexagonCoordsConverterService.convertHexagonCoordsToString(hexagon);
+      const gridHexagon = this.gridHexagonMap.get(coordsKey);
+      // FYI: We mutate a value of grid hexagon because we create and use it only in this component.
+      gridHexagon.value = hexagon.value;
+    });
+
+    this.render();
   }
 }
