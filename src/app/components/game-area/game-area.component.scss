@@ -1,11 +1,10 @@
 
 
 .hexagon-area {
-  position: absolute;
+  position: relative;
 }
 
 eg-hexagon {
-  position: absolute;
-
+  position: relative;
   transform: translate(-50%, -50%);
 }
