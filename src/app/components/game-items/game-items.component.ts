@@ -103,10 +103,9 @@ export class GameItemsComponent extends BaseComponent implements OnInit {
 
     const mergeDescriptor = await this.gameItemsArbiter.mergeAllHexagons(moveDirection);
 
-    /**
-     * FYI[WORKFLOW]: We mutate hexagon's coords to show `move` animation.
-     * After animation we update view with a real values to show updated numbers.
-     */
+    const hexagonValueActions: Interfaces.HexagonAction[] = [];
+    // FYI[WORKFLOW]: We mutate hexagon's coords to show `move` animation.
+    // After animation we update view with a real values to show updated numbers.
     _.map(mergeDescriptor.actions, (action) => {
       const hexagon = _.find(this.hexagons, {
         x: action.from.x,
@@ -117,9 +116,23 @@ export class GameItemsComponent extends BaseComponent implements OnInit {
       hexagon.x = action.to.x;
       hexagon.y = action.to.y;
       hexagon.z = action.to.z;
+
+      hexagonValueActions.push({
+        from: hexagon,
+        to: action.to,
+      });
     });
 
     this.render();
+
+    // FYI[WORKFLOW]: We call update of values a little before the end of animation
+    // to make a transition smoother.
+    setTimeout(() => {
+      _.forEach(hexagonValueActions, (hexagonValueAction) => {
+        hexagonValueAction.from.value = hexagonValueAction.to.value;
+      });
+      this.render();
+    }, 180);
 
     setTimeout(() => {
       this.mergeIsInProgress = false;
