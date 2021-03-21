@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppRouter } from './app.router';
 
@@ -10,6 +11,7 @@ import { HexagonComponent } from './components/hexagon';
 import { GameGridComponent } from './components/game-grid';
 import { GameAreaComponent } from './components/game-area';
 import { GameItemsComponent } from './components/game-items';
+import { GameMetaconfigComponent } from './components/game-metaconfig';
 
 // Pages
 import { GameSettingsPageComponent } from './pages/game-settings-page';
@@ -37,12 +39,14 @@ import { GameStore } from './state-store/game.store';
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     AppRouter,
   ],
   declarations: [
     // Components
     AppComponent,
     HexagonComponent,
+    GameMetaconfigComponent,
     GameGridComponent,
     GameAreaComponent,
     GameItemsComponent,

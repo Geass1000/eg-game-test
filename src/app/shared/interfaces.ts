@@ -1,3 +1,4 @@
+import { Enums } from '.';
 
 export interface ClickDelegateEvent {
   /**
@@ -20,6 +21,12 @@ export interface ClickDelegateEvent {
    * Native mouse event.
    */
   event: MouseEvent;
+}
+
+export interface SelectOption {
+  id: string;
+  value: string;
+  hint: string;
 }
 
 export interface HexagonCubeCoords {
@@ -52,4 +59,9 @@ export interface MergeHexagonsDescriptor {
   changed: boolean;
   actions: HexagonAction<number>[];
   hexagons: Hexagon<number>[];
+}
+
+export interface GameStore {
+  gameStatus: Enums.GameStatus;
+  dataServerURL: string;
 }

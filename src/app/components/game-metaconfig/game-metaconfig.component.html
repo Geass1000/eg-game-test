@@ -1,0 +1,16 @@
+<div class="eg-hidden">
+  <div [attr.data-status]="gameStatus">{{ gameStatus }}</div>
+  <select
+    id="url-server"
+    [(ngModel)]="selectedServerURL"
+    (change)="onChangeServerURL()"
+  >
+    <option
+      *ngFor="let selectOption of selectOptions;"
+      [id]="selectOption.id"
+      [value]="selectOption.value"
+    >
+      {{ selectOption.hint }}
+    </option>
+  </select>
+</div>

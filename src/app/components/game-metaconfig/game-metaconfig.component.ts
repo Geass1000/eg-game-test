@@ -1,0 +1,87 @@
+import {
+  Component,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  OnInit,
+} from '@angular/core';
+
+import { BaseComponent, Enums, Interfaces } from '../../shared';
+
+// Services
+import { GameArbiter } from '../../services/game.arbiter';
+import { GameParamsArbiter } from '../../services/game-params.arbiter';
+
+// State Store
+import { GameStore } from '../../state-store/game.store';
+
+@Component({
+  selector: 'eg-game-metaconfig',
+  templateUrl: './game-metaconfig.component.html',
+  styleUrls: [ './game-metaconfig.component.scss' ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class GameMetaconfigComponent extends BaseComponent implements OnInit {
+  public readonly selectOptions: Interfaces.SelectOption[] = [
+    {
+      id: `remote`,
+      value: `//68f02c80-3bed-4e10-a747-4ff774ae905a.pub.instances.scw.cloud`,
+      hint: `Remote server`,
+    },
+    {
+      id: `localhost`,
+      value: `http://localhost:13337/`,
+      hint: `Local server`,
+    },
+  ];
+  public selectedServerURL: string = this.selectOptions[0].value;
+
+  public gameStatus: Enums.GameStatus;
+  public GameStatus: typeof Enums.GameStatus = Enums.GameStatus;
+
+  constructor (
+    protected changeDetection: ChangeDetectorRef,
+    // Services
+    private gameArbiter: GameArbiter,
+    private gameParamsArbiter: GameParamsArbiter,
+    // State Store
+    private gameStore: GameStore,
+  ) {
+    super(changeDetection);
+  }
+
+  /**
+   * Inits component.
+   */
+  ngOnInit (): void {
+    const gameArbiter$ = this.gameArbiter.getObserver()
+      .subscribe(() => {
+        this.updateView();
+      });
+    this.registrator.subscribe(gameArbiter$);
+
+    this.updateView();
+    this.onChangeServerURL();
+  }
+
+  /**
+   * Updates a game status and renders view.
+   *
+   * @return {void}
+   */
+  updateView (
+  ): void {
+    this.gameStatus = this.gameArbiter.gameStatus;
+    this.render();
+  }
+
+  /**
+   * Handles changes of `Server URL` select logic.
+   * Changes the server.
+   *
+   * @return {void}
+   */
+  onChangeServerURL (
+  ): void {
+    this.gameStore.setDataServerURL(this.selectedServerURL);
+  }
+}
