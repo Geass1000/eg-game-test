@@ -120,7 +120,7 @@ export class HexagonGridService {
   getMaxPositiveHexagonCoords (
     mainAxisValue: number,
     moveDirection: Enums.MoveDirection,
-  ): Interfaces.HexagonCubeCoords {
+  ): Interfaces.Hexagon {
     const gridSize = this.gameParamsArbiter.gameGridRadius - 1;
     const positiveAxisValue = mainAxisValue <= 0
       ? gridSize : gridSize - mainAxisValue;
@@ -133,7 +133,6 @@ export class HexagonGridService {
     // FYI: We convert value to `any` because we can't make different types for
     // main, merge and rest axes.
     return {
-      type: Enums.HexagonCoordsType.Cube,
       [mainAxis]: mainAxisValue,
       [positiveAxis]: positiveAxisValue,
       [negativeAxis]: negativeAxisValue,
@@ -150,7 +149,7 @@ export class HexagonGridService {
   getMaxNegativeHexagonCoords (
     mainAxisValue: number,
     moveDirection: Enums.MoveDirection,
-  ): Interfaces.HexagonCubeCoords {
+  ): Interfaces.Hexagon {
     const inversedDirection = this.inverseDirection(moveDirection);
     return this.getMaxPositiveHexagonCoords(mainAxisValue, inversedDirection);
   }
