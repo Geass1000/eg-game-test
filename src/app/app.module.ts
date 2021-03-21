@@ -29,6 +29,10 @@ import { HexagonGridService } from './services/hexagon-grid.service';
 import { HexagonOperationService } from './services/hexagon-operation.service';
 import { GameArbiter } from './services/game.arbiter';
 
+// State Store
+import { StateStore } from './state-store/state-store.service';
+import { GameStore } from './state-store/game.store';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -50,6 +54,7 @@ import { GameArbiter } from './services/game.arbiter';
     ClickDelegateDirective,
   ],
   providers: [
+    // Services
     GameArbiter,
     GameParamsArbiter,
     GameAreaArbiter,
@@ -58,6 +63,9 @@ import { GameArbiter } from './services/game.arbiter';
     GameService,
     HexagonGridService,
     HexagonOperationService,
+    // State Store
+    StateStore,
+    GameStore,
   ],
   bootstrap: [
     AppComponent,
