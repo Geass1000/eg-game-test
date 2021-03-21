@@ -13,6 +13,7 @@ import { GameItemsComponent } from './components/game-items';
 
 // Pages
 import { GameSettingsPageComponent } from './pages/game-settings-page';
+import { GamePageComponent } from './pages/game-page';
 
 // Directives
 import { KeyEventDirective } from './directives/key-event.directive';
@@ -43,6 +44,7 @@ import { GameArbiter } from './services/game.arbiter';
     GameItemsComponent,
     // Pages
     GameSettingsPageComponent,
+    GamePageComponent,
     // Directives
     KeyEventDirective,
     ClickDelegateDirective,
