@@ -98,4 +98,17 @@ export class HexagonCoordsConverterService {
       }
     }
   }
+
+  /**
+   * Converts hexagon coordinates to the string representation.
+   * Format: x,y,z
+   *
+   * @param  {Interfaces.Hexagon} hexagon
+   * @return {string}
+   */
+  convertHexagonCoordsToString (
+    hexagon: Interfaces.Hexagon,
+  ): string {
+    return `${hexagon.x},${hexagon.y},${hexagon.z}`;
+  }
 }
