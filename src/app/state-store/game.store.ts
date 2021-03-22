@@ -8,9 +8,12 @@ import { StateStore } from './state-store.service';
 @Injectable()
 export class GameStore {
   constructor (
-    private stateStore: StateStore, 
+    // State Store
+    private stateStore: StateStore,
   ) {
     const initialState: Interfaces.GameStore = {
+      gridRadius: null,
+      gridSize: null,
       gameStatus: null,
       dataServerURL: null,
     };
@@ -33,6 +36,25 @@ export class GameStore {
     this.stateStore.setState({
       state: [ 'game', 'dataServerURL' ],
       value: dataServerURL,
+    });
+  }
+
+  /**
+   * Sets a new grid radius.
+   *
+   * @param  {number} gridRadius
+   * @return {void}
+   */
+  setGridRadius (
+    gridRadius: number,
+  ): void {
+    this.stateStore.setState({
+      state: [ 'game', 'gridRadius' ],
+      value: gridRadius,
+    });
+    this.stateStore.setState({
+      state: [ 'game', 'gridSize' ],
+      value: gridRadius - 1,
     });
   }
 }

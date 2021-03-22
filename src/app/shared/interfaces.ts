@@ -62,6 +62,20 @@ export interface MergeHexagonsDescriptor {
 }
 
 export interface GameStore {
+  /**
+   * Number of elements in one grid direction with the central hexagon.
+   *
+   * Radius (GR) of grid.
+   * 1 - 1 el
+   * 2 - 7 els
+   * 3 - 19 els
+   * ...
+   */
+  gridRadius: number;
+  /**
+   * Number of elements in one grid direction without the central hexagon.
+   */
+  gridSize: number;
   gameStatus: Enums.GameStatus;
   dataServerURL: string;
 }
