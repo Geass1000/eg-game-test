@@ -7,11 +7,11 @@ import {
 
 import { Interfaces, Enums, BaseComponent } from '../../shared';
 
-import { GameParamsArbiter } from '../../services/game-params.arbiter';
 import { GameAreaArbiter } from '../../services/game-area.arbiter';
 import { GameItemsArbiter } from '../../services/game-items.arbiter';
 import { HexagonGridService } from '../../services/hexagon-grid.service';
 import { HexagonOperationService } from '../../services/hexagon-operation.service';
+import { GameArbiter } from '../../services/game.arbiter';
 
 type Hexagon = Interfaces.Hexagon<number>;
 
@@ -35,7 +35,7 @@ export class GameItemsComponent extends BaseComponent implements OnInit {
   constructor (
     protected changeDetection: ChangeDetectorRef,
     // Services
-    private gameParamsArbiter: GameParamsArbiter,
+    private gameArbiter: GameArbiter,
     public gameAreaArbiter: GameAreaArbiter,
     public gameItemsArbiter: GameItemsArbiter,
     public hexagonGridService: HexagonGridService,
@@ -79,6 +79,11 @@ export class GameItemsComponent extends BaseComponent implements OnInit {
       return this.hexagonOperationService.cloneHexagon(hexagon);
     });
     this.render();
+
+    const hexagonsCanBeMoved = this.gameItemsArbiter.canHexagonsBeMoved();
+    if (hexagonsCanBeMoved === false) {
+      this.gameArbiter.finishGame();
+    }
   }
 
   /**
