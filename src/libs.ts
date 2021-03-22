@@ -9,6 +9,7 @@ import orderBy from 'lodash/orderBy';
 import forEach from 'lodash/forEach';
 import concat from 'lodash/concat';
 import find from 'lodash/find';
+import some from 'lodash/some';
 import type { LoDashStatic } from 'lodash';
 
 const lodash = {
@@ -23,6 +24,7 @@ const lodash = {
   forEach,
   concat,
   find,
+  some,
 } as LoDashStatic;
 
 (window as any)._ = lodash;
