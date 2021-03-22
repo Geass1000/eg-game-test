@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 
 import { Interfaces, Enums } from '../shared';
 
-import { GameParamsArbiter } from './game-params.arbiter';
+// State Store
+import { StateStore } from '../state-store/state-store.service';
 
 @Injectable()
 export class HexagonGridService {
 
   constructor (
-    private gameParamsArbiter: GameParamsArbiter,
+    // State Store
+    private stateStore: StateStore,
   ) {
   }
 
@@ -121,7 +123,7 @@ export class HexagonGridService {
     mainAxisValue: number,
     moveDirection: Enums.MoveDirection,
   ): Interfaces.Hexagon {
-    const gridSize = this.gameParamsArbiter.gameGridRadius - 1;
+    const gridSize: number = this.stateStore.getState([ `game`, `gridSize` ]);
     const positiveAxisValue = mainAxisValue <= 0
       ? gridSize : gridSize - mainAxisValue;
     const negativeAxisValue = -(mainAxisValue + positiveAxisValue);

@@ -4,10 +4,13 @@ import type { Observable } from 'rxjs';
 
 import { Enums, BaseService, Interfaces } from '../shared';
 
-import { GameParamsArbiter } from './game-params.arbiter';
+// Services
 import { GameService } from './game.service';
 import { HexagonGridService } from './hexagon-grid.service';
 import { HexagonOperationService } from './hexagon-operation.service';
+
+// State Store
+import { StateStore } from '../state-store/state-store.service';
 
 type Hexagon = Interfaces.Hexagon<number>;
 
@@ -35,10 +38,11 @@ export class GameItemsArbiter extends BaseService {
 
   constructor (
     // Services
-    private gameParamsArbiter: GameParamsArbiter,
     private gameService: GameService,
     private hexagonGridService: HexagonGridService,
     private hexagonOperationService: HexagonOperationService,
+    // State Store
+    private stateStore: StateStore,
   ) {
     super();
   }
@@ -90,13 +94,13 @@ export class GameItemsArbiter extends BaseService {
     moveDirection: Enums.MoveDirection,
   ): Promise<Interfaces.MergeHexagonsDescriptor> {
     const mainAxis = this.hexagonGridService.getMainAxisByDirection(moveDirection);
-    const gameGridSize = this.gameParamsArbiter.gameGridRadius - 1;
+    const gridSize = this.stateStore.getState([ `game`, `gridSize` ]);
 
     let mergeWas = false;
     const allMergedHexagons: Hexagon[] = [];
     const allHexagonsActions: Interfaces.HexagonAction[] = [];
     // Merge all hexagon on every main axis value
-    for (let axisValue = -gameGridSize; axisValue <= gameGridSize; axisValue++) {
+    for (let axisValue = -gridSize; axisValue <= gridSize; axisValue++) {
       const hexagonsByDirection = _.filter(this.#hexagons, [ mainAxis, axisValue ]);
 
       // If there are 0 hexagons on the main axis (axisValue)

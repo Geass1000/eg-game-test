@@ -7,12 +7,16 @@ import {
 
 import { Interfaces, Enums, BaseComponent } from '../../shared';
 
+// Services
 import { GameParamsArbiter } from '../../services/game-params.arbiter';
 import { GameAreaArbiter } from '../../services/game-area.arbiter';
 import { GameItemsArbiter } from '../../services/game-items.arbiter';
 import { HexagonCoordsConverterService } from '../../services/hexagon-coords-converter.service';
 import { HexagonGridService } from '../../services/hexagon-grid.service';
 import { HexagonOperationService } from '../../services/hexagon-operation.service';
+
+// State Store
+import { StateStore } from '../../state-store/state-store.service';
 
 type Hexagon = Interfaces.Hexagon<number>;
 
@@ -46,6 +50,8 @@ export class GameGridComponent extends BaseComponent implements OnInit {
     public hexagonGridService: HexagonGridService,
     public hexagonOperationService: HexagonOperationService,
     public hexagonCoordsConverterService: HexagonCoordsConverterService,
+    // State Store
+    private stateStore: StateStore,
   ) {
     super(changeDetection);
   }
@@ -54,11 +60,11 @@ export class GameGridComponent extends BaseComponent implements OnInit {
    * Inits component.
    */
   ngOnInit (): void {
-    const gameParamsArbiter$ = this.gameParamsArbiter.getObserver()
+    const ssGridSize$ = this.stateStore.select([ `game`, `gridSize` ])
       .subscribe(() => {
         this.updateView();
       });
-    this.registrator.subscribe(gameParamsArbiter$);
+    this.registrator.subscribe(ssGridSize$);
 
     const gameAreaArbiter$ = this.gameParamsArbiter.getObserver()
       .subscribe(() => {
@@ -86,7 +92,8 @@ export class GameGridComponent extends BaseComponent implements OnInit {
   updateView (
   ): void {
     const prevGridSize = this.gridSize;
-    this.gridSize = this.gameParamsArbiter.gameGridRadius - 1;
+    const gridSize = this.stateStore.getState([ `game`, `gridSize` ]);
+    this.gridSize = gridSize;
 
     if (prevGridSize !== this.gridSize) {
       this.updateListOfHexagons();
@@ -105,6 +112,10 @@ export class GameGridComponent extends BaseComponent implements OnInit {
     const hexagons = [];
     const inversedDirection = this.hexagonGridService.inverseDirection(Enums.MoveDirection.Bottom);
     const negativeDirectionOffset = this.hexagonGridService.getOffsetByDirection(inversedDirection);
+
+    if (_.isNil(this.gridSize) === true) {
+      return;
+    }
 
     // FYI: We use an Cube coordinates to build grid
     for (let mainAxis = -this.gridSize; mainAxis <= this.gridSize; mainAxis++) {

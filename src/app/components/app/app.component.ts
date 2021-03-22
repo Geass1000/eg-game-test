@@ -1,10 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { GameItemsArbiter } from '../../services/game-items.arbiter';
-import { GameParamsArbiter } from '../../services/game-params.arbiter';
-
 import { BaseComponent } from '../../shared';
+
+// Services
+import { GameArbiter } from '../../services/game.arbiter';
+
+// State Store
+import { GameStore } from '../../state-store/game.store';
 
 @Component({
   selector: 'eg-root',
@@ -13,15 +16,14 @@ import { BaseComponent } from '../../shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends BaseComponent implements OnInit {
-  public gridRadius: number;
-
   constructor (
     // Angular
     protected changeDetection: ChangeDetectorRef,
     private route: ActivatedRoute,
     // Services
-    private gameItemsArbiter: GameItemsArbiter,
-    private gameParamsArbiter: GameParamsArbiter,
+    private gameArbiter: GameArbiter,
+    // State Store
+    private gameStore: GameStore,
   ) {
     super(changeDetection);
   }
@@ -33,6 +35,7 @@ export class AppComponent extends BaseComponent implements OnInit {
       this.onURLFragment(fragment);
     });
     this.registrator.subscribe(routeURL$);
+
     this.render();
   }
 
@@ -51,27 +54,15 @@ export class AppComponent extends BaseComponent implements OnInit {
       return;
     }
 
-    const radius = +parsedFragment[1];
+    const gridRadius = +parsedFragment[1];
 
-    if (radius < 2) {
+    if (gridRadius < 2) {
       console.warn(`AppComponent`);
       return;
     }
 
-    this.gridRadius = radius;
-    this.gameParamsArbiter.gameGridRadius = this.gridRadius;
-    await this.initGame();
-  }
-
-  /**
-   * Inits a new game:
-   *  - inites the game items arbiter.
-   *
-   * @return {Promise<void>}
-   */
-  async initGame (
-  ): Promise<void> {
-    await this.gameItemsArbiter.$init();
+    this.gameStore.setGridRadius(gridRadius);
+    await this.gameArbiter.startGame();
   }
 
   /**

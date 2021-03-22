@@ -7,9 +7,12 @@ import {
 
 import { BaseComponent, Interfaces } from '../../shared';
 
-import { GameParamsArbiter } from '../../services/game-params.arbiter';
+// Services
 import { GameArbiter } from '../../services/game.arbiter';
 import { GameItemsArbiter } from '../../services/game-items.arbiter';
+
+// State Store
+import { GameStore } from '../../state-store/game.store';
 
 @Component({
   selector: 'eg-game-settings-page',
@@ -23,8 +26,9 @@ export class GameSettingsPageComponent extends BaseComponent implements OnInit {
     protected changeDetection: ChangeDetectorRef,
     // Services
     private gameArbiter: GameArbiter,
-    private gameParamsArbiter: GameParamsArbiter,
     private gameItemsArbiter: GameItemsArbiter,
+    // State Store
+    private gameStore: GameStore,
   ) {
     super(changeDetection);
   }
@@ -60,8 +64,8 @@ export class GameSettingsPageComponent extends BaseComponent implements OnInit {
       return;
     }
 
-    this.gameParamsArbiter.gameGridRadius = +event?.id;
-    await this.gameItemsArbiter.$init();
+    const gridRadius = +event?.id;
+    this.gameStore.setGridRadius(gridRadius);
     await this.gameArbiter.startGame();
   }
 }

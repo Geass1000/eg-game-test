@@ -2,10 +2,14 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import type { Observable } from 'rxjs';
 
-import { GameParamsArbiter } from './game-params.arbiter';
-
 import { Interfaces, BaseService } from '../shared';
+
+// Services
+import { GameParamsArbiter } from './game-params.arbiter';
 import { HexagonCoordsConverterService } from './hexagon-coords-converter.service';
+
+// State Store
+import { StateStore } from '../state-store/state-store.service';
 
 @Injectable()
 export class GameAreaArbiter extends BaseService {
@@ -50,6 +54,8 @@ export class GameAreaArbiter extends BaseService {
   constructor (
     private gameParamsArbiter: GameParamsArbiter,
     private hexagonCoordsConverterService: HexagonCoordsConverterService,
+    // State Store
+    private stateStore: StateStore,
   ) {
     super();
 
@@ -87,7 +93,6 @@ export class GameAreaArbiter extends BaseService {
   /**
    * Updates:
    *  - width/height grid area params.
-    this.gridSize = this.gameParamsArbiter.gameGridRadius - 1;
    *  - x/y center coordinates in the area.
    *
    * @return {void}
@@ -95,7 +100,7 @@ export class GameAreaArbiter extends BaseService {
   updateAreaParams (
   ): void {
     // Number of hexagons in every axis.
-    const gameGridSize = this.gameParamsArbiter.gameGridRadius - 1;
+    const gridSize = this.stateStore.getState([ `game`, `gridSize` ]);
 
     const hexagonStrokeWidth = this.gameParamsArbiter.hexagonStrokeWidth;
 
@@ -133,7 +138,7 @@ export class GameAreaArbiter extends BaseService {
      *       = 9*cHR + 2*cHR
      */
     const cHexagonDiagonal = this.gameParamsArbiter.cHexagonRadius * 2;
-    this.#gameAreaWidth = (1 + 1.5 * gameGridSize) * cHexagonDiagonal + hexagonStrokeWidth;
+    this.#gameAreaWidth = (1 + 1.5 * gridSize) * cHexagonDiagonal + hexagonStrokeWidth;
 
     /**
      * iHR - inscribed hexagon radius. Vertical radius.
@@ -164,7 +169,7 @@ export class GameAreaArbiter extends BaseService {
      *        = 12*iHR + 2*iHR
      */
     const iHexagonDiagonal = this.gameParamsArbiter.iHexagonRadius * 2;
-    this.#gameAreaHeight = (1 + gameGridSize * 2) * iHexagonDiagonal + hexagonStrokeWidth;
+    this.#gameAreaHeight = (1 + gridSize * 2) * iHexagonDiagonal + hexagonStrokeWidth;
 
     this.#gameAreaXCenter = this.gameAreaWidth / 2;
     this.#gameAreaYCenter = this.gameAreaHeight / 2;

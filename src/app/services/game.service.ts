@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { Interfaces } from '../shared';
 
-import { GameParamsArbiter } from './game-params.arbiter';
-
+// State Store
 import { StateStore } from '../state-store/state-store.service';
 
 @Injectable()
@@ -12,8 +11,6 @@ export class GameService {
 
   constructor (
     private http: HttpClient,
-    // Services
-    private gameParamsArbiter: GameParamsArbiter,
     // State Store
     private stateStore: StateStore,
   ) {
@@ -28,13 +25,13 @@ export class GameService {
   async getNewHexagons (
     nonEmptyHexagons: Interfaces.Hexagon[],
   ): Promise<Interfaces.Hexagon[]> {
-    const gameRadius = this.gameParamsArbiter.gameGridRadius;
+    const gridRadius = this.stateStore.getState([ `game`, `gridRadius` ]);
 
     const dataServerURL = this.stateStore.getState([ `game`, `dataServerURL` ]);
 
     try {
       const newHexagons = await this.http.post<Interfaces.Hexagon[]>(
-        `${dataServerURL}/${gameRadius}`,
+        `${dataServerURL}/${gridRadius}`,
         nonEmptyHexagons,
       ).toPromise();
       console.log(`GameService.getNewHexagons:`,
