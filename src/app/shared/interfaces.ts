@@ -76,6 +76,10 @@ export interface GameStore {
    * Number of elements in one grid direction without the central hexagon.
    */
   gridSize: number;
+  /**
+   * Number of elements in all gird.
+   */
+  numOfHexaognsInGrid: number;
   gameStatus: Enums.GameStatus;
   dataServerURL: string;
 }

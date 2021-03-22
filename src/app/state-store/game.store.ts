@@ -14,6 +14,7 @@ export class GameStore {
     const initialState: Interfaces.GameStore = {
       gridRadius: null,
       gridSize: null,
+      numOfHexaognsInGrid: null,
       gameStatus: null,
       dataServerURL: null,
     };
@@ -52,9 +53,21 @@ export class GameStore {
       state: [ 'game', 'gridRadius' ],
       value: gridRadius,
     });
+
+    const gridSize = gridRadius - 1;
     this.stateStore.setState({
       state: [ 'game', 'gridSize' ],
       value: gridRadius - 1,
+    });
+
+    let numOfHexagonsPartsPerRadius = 0;
+    for (let i = 1; i <= gridSize; i++) {
+      numOfHexagonsPartsPerRadius += i;
+    }
+    const numOfHexaognsInGrid = 1 + 6 * numOfHexagonsPartsPerRadius;
+    this.stateStore.setState({
+      state: [ 'game', 'numOfHexaognsInGrid' ],
+      value: numOfHexaognsInGrid,
     });
   }
 }
