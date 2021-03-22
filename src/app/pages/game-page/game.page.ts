@@ -54,11 +54,17 @@ export class GamePageComponent extends BaseComponent implements OnInit {
    */
   async updateView (
   ): Promise<void> {
-    this.gameIsStarted = this.shouldStartGame() === true;
-    if (this.gameIsStarted === false) {
+    const gameShouldStart = this.shouldStartGame() === true;
+    if (gameShouldStart === false) {
+      this.gameIsStarted = false;
       return;
     }
 
+    if (this.gameIsStarted === true) {
+      return;
+    }
+
+    this.gameIsStarted = true;
     await this.gameItemsArbiter.$init();
     this.render();
   }
@@ -72,6 +78,11 @@ export class GamePageComponent extends BaseComponent implements OnInit {
   ): boolean {
     const dataServerURL = this.stateStore.getState([ 'game', 'dataServerURL' ]);
     if (_.isEmpty(dataServerURL) === true) {
+      return false;
+    }
+
+    const gridRadius = this.stateStore.getState([ 'game', 'gridRadius' ]);
+    if (_.isNil(gridRadius) === true) {
       return false;
     }
 
