@@ -11,6 +11,7 @@ import { HexagonOperationService } from './hexagon-operation.service';
 
 // State Store
 import { StateStore } from '../state-store/state-store.service';
+import { HexagonCoordsConverterService } from './hexagon-coords-converter.service';
 
 type Hexagon = Interfaces.Hexagon<number>;
 
@@ -41,6 +42,7 @@ export class GameItemsArbiter extends BaseService {
     private gameService: GameService,
     private hexagonGridService: HexagonGridService,
     private hexagonOperationService: HexagonOperationService,
+    private hexagonCoordsConverterService: HexagonCoordsConverterService,
     // State Store
     private stateStore: StateStore,
   ) {
@@ -69,6 +71,47 @@ export class GameItemsArbiter extends BaseService {
   getObserver (
   ): Observable<void> {
     return this.sjNotif.asObservable();
+  }
+
+  /**
+   * Returns `true` if a some hexagon can be moved on the grid.
+   *
+   * @return {boolean}
+   */
+  canHexagonsBeMoved (
+  ): boolean {
+    const numOfHexaognsInGrid = this.stateStore.getState([ 'game', 'numOfHexaognsInGrid' ]);
+    if (this.hexagons.length !== numOfHexaognsInGrid) {
+      return true;
+    }
+
+    const hexagonsMap: Map<string, Hexagon> = new Map();
+    _.forEach(this.hexagons, (hexagon) => {
+      const coordsStr = this.hexagonCoordsConverterService.convertHexagonCoordsToString(hexagon);
+      hexagonsMap.set(coordsStr, hexagon);
+    });
+
+    const allDirections = [
+      Enums.MoveDirection.Bottom,
+      Enums.MoveDirection.BottomLeft,
+      Enums.MoveDirection.BottomRight,
+      Enums.MoveDirection.Top,
+      Enums.MoveDirection.TopLeft,
+      Enums.MoveDirection.TopRight,
+    ];
+
+    return _.some(this.#hexagons, (hexagon) => {
+
+      return _.some(allDirections, (direction) => {
+        const offset = this.hexagonGridService.getOffsetByDirection(direction);
+        const neighborHexagonCoords = this.hexagonOperationService.addCoords(hexagon, offset);
+        const neighborHexagonCoordsStr = this.hexagonCoordsConverterService
+          .convertHexagonCoordsToString(neighborHexagonCoords);
+
+        const neighborHexagon = hexagonsMap.get(neighborHexagonCoordsStr);
+        return neighborHexagon?.value === hexagon.value;
+      });
+    });
   }
 
   /**
