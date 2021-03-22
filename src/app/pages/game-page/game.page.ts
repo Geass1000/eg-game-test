@@ -9,6 +9,7 @@ import { BaseComponent } from '../../shared';
 
 // Services
 import { GameItemsArbiter } from '../../services/game-items.arbiter';
+import { GameArbiter } from '../../services/game.arbiter';
 
 // State Store
 import { StateStore } from '../../state-store/state-store.service';
@@ -26,6 +27,7 @@ export class GamePageComponent extends BaseComponent implements OnInit {
     protected changeDetection: ChangeDetectorRef,
     // Services
     private gameItemsArbiter: GameItemsArbiter,
+    private gameArbiter: GameArbiter,
     // State Store
     private stateStore: StateStore,
   ) {
@@ -57,10 +59,12 @@ export class GamePageComponent extends BaseComponent implements OnInit {
     const gameShouldStart = this.shouldStartGame() === true;
     if (gameShouldStart === false) {
       this.gameIsStarted = false;
+      await this.gameArbiter.openSettings();
       return;
     }
 
-    if (this.gameIsStarted === true) {
+    const dataServerURL = this.stateStore.getState([ 'game', 'dataServerURL' ]);
+    if (_.isEmpty(dataServerURL) === true || this.gameIsStarted === true) {
       return;
     }
 
@@ -76,11 +80,6 @@ export class GamePageComponent extends BaseComponent implements OnInit {
    */
   shouldStartGame (
   ): boolean {
-    const dataServerURL = this.stateStore.getState([ 'game', 'dataServerURL' ]);
-    if (_.isEmpty(dataServerURL) === true) {
-      return false;
-    }
-
     const gridRadius = this.stateStore.getState([ 'game', 'gridRadius' ]);
     if (_.isNil(gridRadius) === true) {
       return false;
