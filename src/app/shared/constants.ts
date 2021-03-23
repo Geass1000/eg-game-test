@@ -1,5 +1,6 @@
+import * as Interfaces from './interfaces';
 
-export const ServerOptions = [
+export const ServerOptions: Interfaces.SelectOption[] = [
   {
     id: `remote`,
     value: `//68f02c80-3bed-4e10-a747-4ff774ae905a.pub.instances.scw.cloud`,
@@ -11,3 +12,5 @@ export const ServerOptions = [
     hint: `Local server`,
   },
 ];
+
+export const RemoteServerURL = ServerOptions[0].value;
