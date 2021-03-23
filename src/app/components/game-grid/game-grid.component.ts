@@ -125,6 +125,7 @@ export class GameGridComponent extends BaseComponent implements OnInit {
         .getMaxNegativeHexagonCoords(mainAxis, Enums.MoveDirection.Bottom);
 
       let nextHexagon = maxPositiveHexagon;
+      nextHexagon.value = 0;
       while (true) {
         hexagons.push(nextHexagon);
         const coordsKey = this.hexagonCoordsConverterService.convertHexagonCoordsToString(nextHexagon);
