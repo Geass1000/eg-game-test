@@ -41,7 +41,7 @@ export class GameStore {
   }
 
   /**
-   * Sets a new grid radius.
+   * Sets a new grid radius, grid size (automatically) and number of hexagons in the grid (automatically).
    *
    * @param  {number} gridRadius
    * @return {void}
@@ -60,6 +60,8 @@ export class GameStore {
       value: gridRadius - 1,
     });
 
+    // Every radius point increases the number of hexagon on 6 * (RADIUS - 1)
+    // so we calculate the sum of all radiuses and multiplies it on 6.
     let numOfHexagonsPartsPerRadius = 0;
     for (let i = 1; i <= gridSize; i++) {
       numOfHexagonsPartsPerRadius += i;
