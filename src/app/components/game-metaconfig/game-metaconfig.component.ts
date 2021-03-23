@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 
-import { BaseComponent, Enums, Interfaces } from '../../shared';
+import { BaseComponent, Enums, Interfaces, Constants } from '../../shared';
 
 // Services
 import { GameArbiter } from '../../services/game.arbiter';
@@ -21,19 +21,8 @@ import { GameStore } from '../../state-store/game.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GameMetaconfigComponent extends BaseComponent implements OnInit {
-  public readonly selectOptions: Interfaces.SelectOption[] = [
-    {
-      id: `remote`,
-      value: `//68f02c80-3bed-4e10-a747-4ff774ae905a.pub.instances.scw.cloud`,
-      hint: `Remote server`,
-    },
-    {
-      id: `localhost`,
-      value: `http://localhost:13337/`,
-      hint: `Local server`,
-    },
-  ];
-  public selectedServerURL: string = this.selectOptions[0].value;
+  public readonly selectOptions: Interfaces.SelectOption[] = Constants.ServerOptions;
+  public selectedServerURL: string = null;
 
   public gameStatus: Enums.GameStatus;
   public GameStatus: typeof Enums.GameStatus = Enums.GameStatus;
