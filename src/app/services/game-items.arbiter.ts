@@ -85,6 +85,8 @@ export class GameItemsArbiter extends BaseService {
       return true;
     }
 
+    // FYI: We create a map object to get fast access to hexagon by its string representation
+    // of coordinates.
     const hexagonsMap: Map<string, Hexagon> = new Map();
     _.forEach(this.hexagons, (hexagon) => {
       const coordsStr = this.hexagonCoordsConverterService.convertHexagonCoordsToString(hexagon);
@@ -100,8 +102,10 @@ export class GameItemsArbiter extends BaseService {
       Enums.MoveDirection.TopRight,
     ];
 
-    return _.some(this.#hexagons, (hexagon) => {
-
+    // We iterate every hexagon and check its neighbors. If we can merge some hexaogns (move one to one),
+    // this logic will return `true`.
+    const someHexagonCanBeMoved = _.some(this.#hexagons, (hexagon) => {
+      // Iterate every neighbor
       return _.some(allDirections, (direction) => {
         const offset = this.hexagonGridService.getOffsetByDirection(direction);
         const neighborHexagonCoords = this.hexagonOperationService.addCoords(hexagon, offset);
@@ -112,6 +116,8 @@ export class GameItemsArbiter extends BaseService {
         return neighborHexagon?.value === hexagon.value;
       });
     });
+
+    return someHexagonCanBeMoved;
   }
 
   /**
