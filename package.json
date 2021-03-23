@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "com:clean-dist": "gulp --gulpfile=./gulpfile.js clean-dist",
     "dev:start": "ng serve --configuration=local",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "env:extract-non-static": "gulp --gulpfile=./gulpfile.js extract-non-static",
+    "release:build-app": "ng build --configuration=release --base-href / --output-path dist/static --deployUrl static/",
+    "release:build": "npm run com:clean-dist && npm run release:build-app && npm run env:extract-non-static"
   },
   "private": true,
   "dependencies": {
@@ -35,7 +35,9 @@
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
     "codelyzer": "^6.0.0",
+    "del": "^6.0.0",
     "eslint": "^7.22.0",
+    "gulp": "^4.0.2",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.1.0",

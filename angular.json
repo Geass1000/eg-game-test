@@ -41,7 +41,7 @@
                 }
               ]
             },
-            "production": {
+            "release": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -79,8 +79,8 @@
             "local": {
               "browserTarget": "client:build:local"
             },
-            "production": {
-              "browserTarget": "client:build:production"
+            "release": {
+              "browserTarget": "client:build:release"
             }
           }
         },
@@ -127,8 +127,8 @@
             "devServerTarget": "client:serve"
           },
           "configurations": {
-            "production": {
-              "devServerTarget": "client:serve:production"
+            "release": {
+              "devServerTarget": "client:serve:release"
             }
           }
         }
