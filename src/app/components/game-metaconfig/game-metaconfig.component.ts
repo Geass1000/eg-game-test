@@ -49,7 +49,6 @@ export class GameMetaconfigComponent extends BaseComponent implements OnInit {
     this.registrator.subscribe(gameArbiter$);
 
     this.updateView();
-    this.onChangeServerURL();
   }
 
   /**
