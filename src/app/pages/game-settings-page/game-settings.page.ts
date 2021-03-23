@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 
-import { BaseComponent, Interfaces } from '../../shared';
+import { BaseComponent, Interfaces, Constants } from '../../shared';
 
 // Services
 import { GameArbiter } from '../../services/game.arbiter';
@@ -66,6 +66,7 @@ export class GameSettingsPageComponent extends BaseComponent implements OnInit {
 
     const gridRadius = +event?.id;
     this.gameStore.setGridRadius(gridRadius);
+    this.gameStore.setDataServerURL(Constants.RemoteServerURL);
     await this.gameArbiter.startGame();
   }
 }
